@@ -10,7 +10,7 @@ We will proceed in 2 steps :
 
 You will use the process bellow in order to initiate the BAM stack.
 
-Notes:
+**Notes:**
 - Before using setup.sh, you need to comment the following lines in the script :
    - If you don't want to push the new repo to BAM GitHub repos :
       - 34: hub create -p "bamlab/$NAME"
@@ -27,12 +27,12 @@ Notes:
 
 1. $ git clone https://github.com/bamlab/create-bam-stack.git <some_path>
 2. $ cd <some_path>
-3. # Edit the setup.sh script as described above
+3. \# Edit the setup.sh script as described above
 4. $ ./setup.sh
-    -> Answer to the first question with your project's name
-    -> Say "yes" to api generation
-    -> Say "yes" to backoffice generation
-    -> **Say "skip" to hosting configuration**
+    - Answer to the first question with your project's name
+    - Say "yes" to api generation
+    - Say "yes" to backoffice generation
+    - **Say "skip" to hosting configuration**
 
 5. $ grep -r myproject <project_name>-* | cut -d ':' -f 1 | sort | uniq | xargs sed -i 's:myproject:<project_name>:g'
 6. $ grep -r MyProject <project_name>-* | cut -d ':' -f 1 | sort | uniq | xargs sed -i 's:MyProject:<beautiful_project_name>:g'
@@ -55,7 +55,7 @@ Copy the following files to the root dir of your new BAM stack api :
  - Dockerfile         -> <root_dir>/Dockerfile
  - dockerignore       -> <root_dir>/.dockerignore
 
-Note: The last one is stored as a regular file in the initial repo, but has to be copied as a hidden file.
+**Note:** The last one is stored as a regular file in the initial repo, but has to be copied as a hidden file.
 
 These files add the Docker logic to the project so that you can perform a `docker-compose up` commands.
 
@@ -67,7 +67,7 @@ You can do so either by :
  - customizing the config files in `./config` in your new BAM stack api project
  - using the config exemples in `./config` in this repo to customize the config files in the BAM stack api project
 
-Note: the `./config/default.yaml` file available in this repo should be enough to perform a PoC test.
+**Note:** the `./config/default.yaml` file available in this repo should be enough to perform a PoC test.
 
 ### Firebase config
 
@@ -78,9 +78,10 @@ since the 4th step of create-bam-stack README explains it well enough.
 When you have it, download the related private key and put it in your config dir under the name `firebase-adminsdk.staging.json`,
 so that it will be accessible to the app at runtime.
 
-Note 1: Firebase is only used for user authentication.
+**Note:**
+ - Firebase is only used for user authentication.
 
-Note 2: Firebase credentials are not committed in this repo
+ - Firebase credentials are not committed in this repo
 
 ### Running the app
 
