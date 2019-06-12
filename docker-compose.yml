@@ -1,0 +1,44 @@
+# TODO update rpx docker-compose version so that we can use v3
+#version: '3'
+version: '2'
+services:
+  # Database service, use by all configurations
+  database:
+    build: "./docker"
+    image: "testremi-database"
+    container_name: "testremi-database"
+    ports:
+      - "5432:5432"
+    environment:
+      TZ: "Europe/Paris"
+      POSTGRES_USER: "docker"
+      POSTGRES_PASSWORD: "docker"
+      POSTGRES_DB: "testremi"
+
+  # Prod-like service
+  node:
+    command: "start"
+    build: "."
+    image: "testremi-api"
+    container_name: "testremi-api"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./config/:/opt/app/config
+    depends_on:
+      - database
+
+  # dev-like service with live-reload
+  node-lr:
+    command: "dev:watch"
+    build: "."
+    image: "testremi-api"
+    container_name: "testremi-api-lr"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./src/:/opt/app/src/
+      - ./utils/:/opt/app/utils/
+      - ./config/:/opt/app/config
+    depends_on:
+      - database
