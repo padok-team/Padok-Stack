@@ -24,7 +24,7 @@ You will use the process bellow in order to initiate the BAM stack.
 - When the script asks you where you want your app to be hosted, answer the following :
       - "skip"
 
-
+The process is the following:
 1. $ git clone https://github.com/bamlab/create-bam-stack.git <some_path>
 2. $ cd <some_path>
 3. \# Edit the setup.sh script as described above
