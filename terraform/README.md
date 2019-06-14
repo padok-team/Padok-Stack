@@ -122,7 +122,7 @@ Authentication & authorization
 Tests
 -----
 
-Test on the cluster_kube config:
+**Test on the cluster_kube config:**
  - Create a cluster and a VPC network: **OK**
  - Create a cluster, using the default VPC network: **OK**
  - Create a regional cluster: **OK**
@@ -143,7 +143,7 @@ Test on the cluster_kube config:
       fro m loading configurations by specifying `-config=""`."
 
 
-Test on the buckets config:
+**Test on the buckets config:**
  - Create 2 buckets: **OK**
  - Terraform plan when the cluster is already there: **OK**
     - Updated in case of minor changes
@@ -155,7 +155,7 @@ Test on the buckets config:
  - Terraform import when the .tfstate file is OK: **OK**
     - Terraform detect the resource already exist
 
-Test on the database:
+**Test on the database:**
  - Deploy a PostgreSQL database: **OK**
  - Define database name: **OK**
  - Define user name and password: **OK**
