@@ -1,10 +1,14 @@
 TODO list
 ---------
 
+ - **Comlete database tests**
+ - Cluster multi-master ?
  - List all required APIs and autorizations
  - Create a custom `VPC` ?
  - Check that the created cluster is configured the way we want it to be: c.f. params values
  - Delete the default node pool ?
+ - bucket: use bucket-level authorization strategy ?
+    -> How to do it ?
 
 Goals
 -----
@@ -81,6 +85,42 @@ Authentication & authorization
  - module.gke.google_project_iam_member.cluster_service_account-log_writer: 1 error occurred:
 	* google_project_iam_member.cluster_service_account-log_writer: Error applying IAM policy for project "padok-training-lab": Error setting IAM policy for project "padok-training-lab": googleapi: Error 403: The caller does not have permission, forbidden
    => Note required if we use an existing service account
+
+Tests
+-----
+
+Test on the cluster_kube config:
+ - Create a cluster and a VPC network: **OK**
+ - Create a cluster, using the default VPC network: **OK**
+ - Create a regional cluster: **OK**
+    - Region: europe-west4
+    - Zones: <region>-<a,b,c>
+    - 1 node in each zone
+ - Perform regular operational actions on the cluster: **OK**
+    - gcloud ... get-credentials -> gives kubectl the proper credentials
+    - kubectl get no -> all node are running
+    - kubectl get po -> all admin pods are running, with all containers ready
+    - kubectl exec -> OK
+ - Terraform plan when the cluster is already there: **Not that good**
+    - The module want to create new object even if they already exist
+    - Why ?
+
+Test on the buckets config:
+ - Create 2 buckets: **OK**
+ - Terraform plan when the cluster is already there: **OK**
+    - Updated in case of minor changes
+    - Unchanged when there are no changes to apply
+
+Test on the database:
+ - Deploy a PostgreSQL database: **OK**
+ - Define database name: **OK**
+ - Define user name and password: **OK**
+ - Connect to the database from **inside** the cluster: **KO**
+ - Connect to the database from **outside** the cluster: **KO**
+ - Terraform plan when the cluster is already there: **OK**
+    - The user seams to always be re-created: probably because of the password definition
+    - The database zone preference is always updated, even if not defined in the first place
+      Probably because GCP automatically assign one in the chosen region upon creation
 
 Usage
 -----
