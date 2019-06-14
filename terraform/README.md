@@ -1,9 +1,9 @@
-TODO
-----
+TODO list
+---------
 
- - List required APIs and autorizations
- - Create a custom VPC ?
- - Check that the created cluster is configured the way we want it to be
+ - List all required APIs and autorizations
+ - Create a custom `VPC` ?
+ - Check that the created cluster is configured the way we want it to be: c.f. params values
  - Delete the default node pool ?
 
 Goals
@@ -37,12 +37,23 @@ Design
     - Provide:
        - VPC creation
 
-**Terraform configuration:**
+**Actual Terraform configuration:**
  - The db config was the first test,
    so its development is rather basic.
  - The cluster_kube config was made using an exemple from the following post:
     -> https://github.com/terraform-providers/terraform-provider-google/issues/3746
    and so looks a lot better...
+
+**Targetted Terraform configuration:**
+ - The same way it's done for cluster_kube config
+ - For now, and to keep it simple, the configuration of sub-components are separated
+    - So there is less dependencies between them
+    - So we can, if needed, use different Terraform version for 2 different sub-component
+ - Using 4 config files
+    - `providers.tf`: currently defining google and google-beta providers
+    - `modules.tf:` use of required module based on input variables defined elsewere
+    - `variables.tf:` input variables definitions
+    - `vars.auto.tfvars:` input variables assignments
 
 Compatibility
 -------------
