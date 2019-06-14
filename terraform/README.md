@@ -1,13 +1,27 @@
-We currently want to use Terraform to provision 3 kinds of objects:
+TODO
+----
+
+ - List required APIs and autorizations
+ - Create a custom VPC ?
+ - Check that the created cluster is configured the way we want it to be
+ - Delete the default node pool ?
+
+Goals
+-----
+
+**We currently want to use Terraform to provision 3 kinds of objects:**
  - PostgreSQL databases
  - Kubernetes clusters (without the apps)
  - Google Cloud Storage buckets
 
-We will (try to) do this using Terraform modules:
+Design
+------
+
+**We will do this using Terraform modules:**
  - Available on the Terraform public registry: https://registry.terraform.io/
  - Verified by HashiCorp
 
-3 useful modules have been identified so far:
+**3 useful modules have been identified so far:**
  - sql-db:
     - URL: https://registry.terraform.io/modules/GoogleCloudPlatform/sql-db/google/1.1.1
     - Provide:
@@ -23,7 +37,17 @@ We will (try to) do this using Terraform modules:
     - Provide:
        - VPC creation
 
-Compatibility issues:
+**Terraform configuration:**
+ - The db config was the first test,
+   so its development is rather basic.
+ - The cluster_kube config was made using an exemple from the following post:
+    -> https://github.com/terraform-providers/terraform-provider-google/issues/3746
+   and so looks a lot better...
+
+Compatibility
+-------------
+
+**We cannot currently use Terraform last version:**
  - Terraform v0.12.x
     - Include breaking changes
     - v0.12 was released around may 20th, 2019
@@ -31,30 +55,23 @@ Compatibility issues:
     -> But they are compatible with the latest v0.11.x version: v0.11.4
     -> So we will use Terraform v0.11.4 whenever needed, until the necessary module updates are released
 
-Terraform configuration:
- - The db config was the first test,
-   so its development is rather basic.
- - The cluster_kube config was made using an exemple from the following post:
-    -> https://github.com/terraform-providers/terraform-provider-google/issues/3746
-   and so looks a lot better...
+Authentication & authorization
+------------------------------
 
-GCP required APIs:
+**GCP required APIs:**
  - gke
  - gcp sql
  - TODO list other required APIs
 
-GCP authorizations:
+**GCP authorizations:**
  - module.gke.google_project_iam_member.cluster_service_account-log_writer: 1 error occurred:
 	* google_project_iam_member.cluster_service_account-log_writer: Error applying IAM policy for project "padok-training-lab": Error setting IAM policy for project "padok-training-lab": googleapi: Error 403: The caller does not have permission, forbidden
    => Note required if we use an existing service account
 
-TODO:
- - List required APIs and autorizations
- - Create a custom VPC ?
- - Check that the created cluster is configured the way we want it to be
- - Delete the default node pool ?
+Usage
+-----
 
-usage:
+**Actions:**
  - Download Terraform v0.11.4 from the following URL:
     -> https://releases.hashicorp.com/terraform/0.11.14/terraform_0.11.14_linux_amd64.zip
  - Unzip, then copy the binary to /opt folder (for example) under the name "terraform_0.11.4"
@@ -66,7 +83,7 @@ usage:
  - Update kubernetes conf
      - gcloud container clusters --region europe-west4 get-credentials bam-stack-api
 
-Expected result:
+**Expected result:**
  - Create of a kubernetes master node (or more than one ?)
  - Create of node pool
  - Reuse of the default VPC
