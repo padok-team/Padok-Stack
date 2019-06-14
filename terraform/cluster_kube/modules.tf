@@ -32,5 +32,6 @@ module "gke" {
   node_pools_taints          = "${var.node_pools_taints}"
   node_pools_tags            = "${var.node_pools_tags}"
 
+  remove_default_node_pool   = "${var.remove_default_node_pool}"
   service_account            = "${var.service_account}"
 }

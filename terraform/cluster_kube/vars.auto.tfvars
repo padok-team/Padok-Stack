@@ -1,9 +1,6 @@
 ##########################################################################################
 # GCP Vars
-credentials                = "/work/keys/padok-training-lab-d7eb320aae0e.json"
-project_id                 = "padok-training-lab"
 name                       = "bam-stack-api"
-region                     = "europe-west4"
 
 ##########################################################################################
 # GCP VPC Vars

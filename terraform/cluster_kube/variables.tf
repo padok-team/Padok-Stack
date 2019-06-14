@@ -1,11 +1,3 @@
-variable "credentials" {
-  description = "The credentials to connect GCP (required)"
-}
-
-variable "project_id" {
-  description = "The project ID to host the cluster in (required)"
-}
-
 variable "name" {
   description = "The name of the cluster (required)"
 }
@@ -18,10 +10,6 @@ variable "description" {
 variable "regional" {
   description = "Whether is a regional cluster (zonal cluster if set false. WARNING: changing this after cluster creation is destructive!)"
   default     = true
-}
-
-variable "region" {
-  description = "The region to host the cluster in (required)"
 }
 
 variable "zones" {
