@@ -13,6 +13,9 @@ Goals
  - PostgreSQL databases
  - Kubernetes clusters (without the apps)
  - Google Cloud Storage buckets
+ - DB with auto backups ?
+ - Bucket: set bucket level authorization strategy ?
+    -> How to do it ?
 
 Design
 ------
