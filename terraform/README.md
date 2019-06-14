@@ -104,12 +104,23 @@ Test on the cluster_kube config:
  - Terraform plan when the cluster is already there: **Not that good**
     - The module want to create new object even if they already exist
     - Why ?
+ - Terraform import when the .tfstate file was lost or corrupted: **KO**
+    Error message: "Error: Provider "kubernetes" depends on non-var "local.cluster_endpoint". Providers for import can currently
+      only depend on variables or must be hardcoded. You can stop import
+      fro m loading configurations by specifying `-config=""`."
+
 
 Test on the buckets config:
  - Create 2 buckets: **OK**
  - Terraform plan when the cluster is already there: **OK**
     - Updated in case of minor changes
     - Unchanged when there are no changes to apply
+ - Terraform import when the .tfstate file was lost or corrupted: **OK**
+    - The "force_destroy" field is not imported though
+    - However it seems to be without impact on instances,
+    - and doesn't trigger a re-creation on later plan / apply
+ - Terraform import when the .tfstate file is OK: **OK**
+    - Terraform detect the resource already exist
 
 Test on the database:
  - Deploy a PostgreSQL database: **OK**
@@ -121,6 +132,11 @@ Test on the database:
     - The user seams to always be re-created: probably because of the password definition
     - The database zone preference is always updated, even if not defined in the first place
       Probably because GCP automatically assign one in the chosen region upon creation
+ - Terraform import when the .tfstate file is OK: **Not that bad**
+    - The database_instance object is imported and only a little update will be trigger on next plan / apply
+    - The database object is fully and correctly imported
+    - The user object is imported but will need an update...
+    - The password doesn't seem to be imortable...
 
 Usage
 -----
