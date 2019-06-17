@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "bam-stack-api.fullname" . }}
+  labels:
+{{ include "bam-stack-api.labels" . | indent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - name: http
+      port: {{ .Values.service.port }}
+      targetPort: node-port
+      procotol: TCP
+  selector:
+    # TODO ???
+    app.bam-stack-api.io/name: {{ include "bam-stack-api.name" . }}
+    app.bam-stack-api.io/instance: {{ .Release.Name }}

@@ -64,12 +64,16 @@ Add your own YAML files.
 Test the chart with:
  - `Helm template <chart_dir> -x templates/<template_filename>`
      -> If your template is not valid, you may have uneasy error messages, that's the way it is...
+ - `Helm lint` (TODO)
 
 ### Deploy
 
 Prequisite: At first we will suppose that the image <GCR_IMAGE> dockerizing the API is available.
 
-First 
 problems:
  - system:serviceaccount:kube-system:default
     -> Solved: with a dedicated Tiller service account created in Kubernetes
+ - Deployment occured in the wrong namespace...
+
+Initial deployment:
+ - helm install kubernetes

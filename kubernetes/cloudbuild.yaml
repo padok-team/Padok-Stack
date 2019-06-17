@@ -1,0 +1,10 @@
+steps:
+ # Building the API image
+ - name: 'gcr.io/cloud_builders/docker'
+   env:
+    - 'CGP_PROJECT=padok-training-lab'
+   args: 
+    - 'build'
+    - '-t'
+    - 'gcr.io/$GCP_PROJECT/bam-stack-api:$COMMIT_SHA'
+    - '.'

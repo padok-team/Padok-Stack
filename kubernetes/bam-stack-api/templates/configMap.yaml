@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "bam-stack-api.fullname" . }}
+  labels:
+{{ include "bam-stack-api.labels" . | indent 4 }}
+data:
+  parameters.yml.dist: |
+
+    listen_port: 3000
+    cors_origin: http://localhost:3001
+    
+    database:
+      host: db
+      port: 5432
+      database: bam_stack_api
+      username: docker
+      password: docker
+    
+    cheat_bearer: null
+    
+    firebase:
+      service_account_path: './config/firebase-adminsdk.json'
+    
+    apollo:
+      playground: true
+      introspection: true
+      engine_api_key: false

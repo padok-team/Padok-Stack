@@ -1,0 +1,58 @@
+### deployment level ###
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "bam-stack-api.fullname" . }}
+  labels:
+{{ include "bam-stack-api.labels" . | indent 4 }}
+spec:
+  ### replicaset level ###
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.bam-stack-api.io/name: {{ include "bam-stack-api.fullname" . }}
+      app.bam-stack-api.io/instance: {{ .Release.Name }}
+  template:
+    ### pod level ###
+    # As always with replication, the pod's labels need to match replicaset selector
+    metadata:
+      labels:
+        app.bam-stack-api.io/name: {{ include "bam-stack-api.fullname" . }}
+        app.bam-stack-api.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+      # Here we describe the structure of the containers of the pod.
+      # In this case, only one container id needed:
+      #  - image
+      #  - volumes
+      #     - config
+      #     - secrets -> configMap for now...
+      #  - ports
+      #  - env vars -> None
+      #  - imagePullPolicy
+        - name: {{ .Chart.Name }}
+#          image: ubuntu
+#          command: ["sleep"]
+#          args: ["25000"]
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+#          env:
+#           -
+          volumeMounts:
+           - name: config-volume
+             mountPath: "/opt/app/config/parameters.yaml"
+             subPath: parameters.yml.dist
+#           - name: firebase-key
+#             mountPath: "/opt/app/config/firebase-adminsdk.json"
+#             subPath: {{ .Values.firebase.key }}
+          ports:
+           - name: node-port
+             containerPort: 3000
+             protocol: TCP
+      volumes:
+#       - name: firebase-key
+#         secret:
+#           secretName: firebaseKey
+       - name: config-volume
+         configMap:
+           name: {{ include "bam-stack-api.fullname" . }}

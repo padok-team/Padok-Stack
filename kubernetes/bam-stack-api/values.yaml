@@ -1,0 +1,24 @@
+# Default values for kubernetes.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: gcr.io/padok-training-lab/bam-stack-api
+  tag: latest
+  pullPolicy: Always
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: NodePort
+  port: 3000
+
+api:
+  confFile:
+
+firebase:
+  key:
