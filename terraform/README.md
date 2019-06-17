@@ -1,15 +1,18 @@
 TODO list
 ---------
 
- - **Comlete database tests**
- - Cluster multi-master ?
- - List all required APIs and autorizations
- - Create a custom `VPC` ?
- - Check that the created cluster is configured the way we want it to be: c.f. params values
- - Delete the default node pool ?
+ - Use security group for API -> db comm ? (is this concept limited to AWS or also available with GCP)
  - DB with auto backups ?
+ - List all required APIs and autorizations
+ - Check that the created cluster is configured the way we want it to be: c.f. params values
  - bucket: use bucket-level authorization strategy ?
     -> How to do it ?
+ - Create a custom `VPC` ?
+
+ - Previously done:
+    - Cluster multi-master -> Available through "regional" clusters
+    - Delete the default node pool -> done through Terraform module conf
+    - Complete database tests -> Only one still KO but it's about external access to the database
 
 Goals
 -----
