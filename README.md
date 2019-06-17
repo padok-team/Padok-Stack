@@ -3,11 +3,14 @@ BAM stack in the cloud
 
 This project is about making BAM stack functional and easy to deploy in the cloud.
 
-To make this happen we will use:
- - Terraform, deployment of:
-    - A kubernetes cluster
-    - A PostgreSQL database
- - Helm, deployment of the app within the above mentioned cluster
- - Docker containers
-
-Please see readmes in sub dir for documentations about each of these subjects.
+To make this happen you will have to:
+ 1. [Init & Dockerize the app](docker/README.md):
+     - Use BAM tools in order to initiate a bam-stack-like GIT repository
+     - Include some Docker files
+     - Manage Firebase authent
+     - Customize the app config
+ 2. [Provision your environment with Terraform](terraform/README.md):
+     - Create a GKE Kubernetes cluster 
+     - Create a GCP SQL Database
+     - Create GCS buckets
+ 3. [Deploy the app with Helm](README_kubernetes.md)
