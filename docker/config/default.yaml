@@ -1,0 +1,19 @@
+listen_port: 3000
+cors_origin: http://localhost:3001
+
+database:
+  host: db
+  port: 5432
+  database: testremi
+  username: docker
+  password: docker
+
+cheat_bearer: null
+
+firebase:
+  service_account_path: './config/firebase-adminsdk.json'
+
+apollo:
+  playground: true
+  introspection: true
+  engine_api_key: false
