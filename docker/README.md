@@ -53,6 +53,8 @@ The process is the following:
  5. Make a substitution on every files, replacing myproject (resp. MyProject) by your project name (resp. a more beautiful version of the project name)
      - More beautiful doesn't mean exotic: please stick to aplha-numerical characters.
 
+**Note for Mac users:** These command may fail. In that case you can replace these patterns using your IDE instead.
+
 After these few steps you will end up with two newly created Git repo in sub directory:
  - `<project_name>-api`
  - `<project_name>-backoffice`
