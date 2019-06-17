@@ -45,7 +45,7 @@ The process is the following:
 6. $ grep -r myproject <project_name>-* | cut -d ':' -f 1 | sort | uniq | xargs sed -i 's:myproject:<project_name>:g'
 7. $ grep -r MyProject <project_name>-* | cut -d ':' -f 1 | sort | uniq | xargs sed -i 's:MyProject:<beautiful_project_name>:g'
 
-Note: the two command above perform the following actions:
+**Note:** the two command above perform the following actions:
  1. Find occurrences of myproject (recp. MyProject) in the newly created GIT repos
  2. Cut the lines in order to keep only the file names
  3. Sort the filename (although it may already be properly sorted)
@@ -77,7 +77,9 @@ These files add the Docker logic to the project so that you can perform a `docke
 
 ### Config files
 
-Any command may still fail however if you don't set the proper configuration values:
+Any command may still fail however if you don't set the proper configuration values.
+
+In order to do that you will use the config example available in the bam-stack-api repo (so not the one you just created!)
  - Remove any files in `./config` dir
  - Using the config exemples in `./config` in this repo customize the config files in the BAM stack api project
 
@@ -97,7 +99,6 @@ Which mean you need a Firebase project:
 
 **Note:**
  - Firebase is only used for user authentication.
-
  - Firebase credentials are not committed in this repo
 
 ### Running the app
