@@ -1,5 +1,4 @@
-BAM stack in the cloud
-======================
+# BAM stack in the cloud
 
 This project is about making BAM stack functional and easy to deploy in the cloud.
 
@@ -14,3 +13,12 @@ To make this happen you will have to:
      - Create a GCP SQL Database
      - Create GCS buckets
  3. [Deploy the app with Helm](kubernetes/README.md)
+
+**Careful:** the part 3 won't work if you didn't complete part 1 and 2 first.
+
+# Brief about the BAM stack
+
+The BAM stack is composed of :
+ - The Node app the user will send request to
+ - A PostgreSQL database
+ - AN external Firebase project, only used for user authentication

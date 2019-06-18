@@ -57,8 +57,6 @@ Careful: As you can see, we Helm to initialize Tiller with the service account w
 `Helm` will look at you kubectl config and install `Tiller` in the cluster
 within the `kube-system` namespace.
 
-TODO: add a command that is closer to what we'll do in production environments
-
 ## Build Helm-related Kubernetes files
 
 ### Build the image
@@ -76,6 +74,17 @@ Test the chart with:
  - `Helm template <chart_dir> -x templates/<template_filename>`
      -> If your template is not valid, you may have uneasy error messages, that's the way it is...
  - `Helm lint` (TODO)
+
+### TLS secrets
+
+In order to enable HTTPS connection to the app we will configure the Ingress' TLS support.
+
+First, we need a certficate and a private key.
+If you don't already have them, just perform the following:
+ - openssl genrsa -out tls.key 2048
+ - openssl req -new -x509 -key tls.key -out tls.cert -days 360 -subj /CN=<domain_name>
+
+The domain name must match the host you provided in the ingress conf (I.e. bam-stack.api.com in our case)
 
 ### Service account: cloudsql access
 
@@ -104,6 +113,9 @@ As for the secret, you can create it like so:
 The same way we will create a secret for the cloudsql proxy:
  - kubectl create secret generic sql-proxy --from-file=postgres-admin-key.json=<path_to_key>
 
+And finaly for the TLS credentials:
+ - kubectl create secret tls tls-secret --cert=<path_to_cert> --key=<path_to_key>
+
 ### Deploy
 
 Prequisite: At first we will suppose that the image <GCR_IMAGE> dockerizing the API is available.
@@ -114,6 +126,10 @@ problems:
  - Deployment occured in the wrong namespace...
     -> Default is for Helm to install the Chart in the current namespace
     -> This can be overriden by using install / upgrade commands with the `--namespace` option
+ - Ingress never get any address, no HTTP load balancer is ever created...
+    -> The HTTP load balancer addon was disabled at the cluster level.
+    -> Enabling it resolved the problem
+    -> Terraform cluster_kube conf was updated so that the problem won't happen again
 
 Initial deployment:
  - helm install bam-stack-api
