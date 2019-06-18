@@ -23,6 +23,6 @@ data:
       service_account_path: './config/firebase-adminsdk.json'
     
     apollo:
-      playground: false
-      introspection: false
+      playground: true
+      introspection: true
       engine_api_key: false
