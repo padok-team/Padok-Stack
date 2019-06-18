@@ -77,6 +77,18 @@ Test the chart with:
      -> If your template is not valid, you may have uneasy error messages, that's the way it is...
  - `Helm lint` (TODO)
 
+### Service account: cloudsql access
+
+ - go to: [here](https://console.cloud.google.com/iam-admin/serviceaccounts)
+ - Then "Create a new account"
+ - Enter basic info
+ - Add the following roles:
+    - Cloud SQL > Client Cloud SQL
+    - Cloud SQL > Éditeur Cloud SQL
+    - Cloud SQL > Administrateur Cloud SQL
+ - Then click on "CREATE KEY" and chose the `json` format
+ - Then move this key to a safe place
+
 ### Secret management
 
 Bam-stack-api require an access to Firebase project, guaranteed by a key expected in json format.
@@ -88,6 +100,9 @@ The volume mount is already configured in the `deployment.yaml` file in the char
 
 As for the secret, you can create it like so:
  - kubectl create secret generic firebase --from-file=firebase-key=<path_to_key>
+
+The same way we will create a secret for the cloudsql proxy:
+ - kubectl create secret generic sql-proxy --from-file=postgres-admin-key.json=<path_to_key>
 
 ### Deploy
 
