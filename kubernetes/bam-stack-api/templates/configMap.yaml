@@ -8,10 +8,10 @@ data:
   parameters.yml.dist: |
 
     listen_port: 3000
-    cors_origin: http://localhost:3001
+    cors_origin: false
     
     database:
-      host: db
+      host: 10.120.0.5
       port: 5432
       database: bam_stack_api
       username: docker
@@ -23,6 +23,6 @@ data:
       service_account_path: './config/firebase-adminsdk.json'
     
     apollo:
-      playground: true
-      introspection: true
+      playground: false
+      introspection: false
       engine_api_key: false

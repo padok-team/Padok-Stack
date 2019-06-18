@@ -31,28 +31,25 @@ spec:
       #  - env vars -> None
       #  - imagePullPolicy
         - name: {{ .Chart.Name }}
-#          image: ubuntu
-#          command: ["sleep"]
-#          args: ["25000"]
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
 #          env:
 #           -
           volumeMounts:
-           - name: config-volume
-             mountPath: "/opt/app/config/parameters.yaml"
+           - name: vol-config
+             mountPath: "/opt/app/config/default.yaml"
              subPath: parameters.yml.dist
-#           - name: firebase-key
-#             mountPath: "/opt/app/config/firebase-adminsdk.json"
-#             subPath: {{ .Values.firebase.key }}
+           - name: vol-firebase
+             mountPath: "/opt/app/config/firebase-adminsdk.json"
+             subPath: firebase-key
           ports:
            - name: node-port
              containerPort: 3000
              protocol: TCP
       volumes:
-#       - name: firebase-key
-#         secret:
-#           secretName: firebaseKey
-       - name: config-volume
+       - name: vol-firebase
+         secret:
+           secretName: firebase
+       - name: vol-config
          configMap:
            name: {{ include "bam-stack-api.fullname" . }}
