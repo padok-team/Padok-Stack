@@ -1,4 +1,4 @@
 .terraform/
 terraform.tfstate
 .terraform.tfstate.lock.info
-config.tfplan
+*.tfplan
