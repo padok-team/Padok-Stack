@@ -46,6 +46,14 @@ spec:
            - name: node-port
              containerPort: 3000
              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: node-port
+          readinessProbe:
+            httpGet:
+              path: /
+              port: node-port
         - image: gcr.io/cloudsql-docker/gce-proxy:1.11
           name: cloudsql-proxy
           command:
