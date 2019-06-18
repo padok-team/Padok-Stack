@@ -42,7 +42,7 @@ So just follow the READMEs mentioned at the beginning of this page and be ready 
 # Brief about the BAM stack
 
 The BAM stack is composed of :
- - The Node app the user will send request to
+ - **The Node app the user will send request to**
     - Listen: 3000
     - Answer to URL:
        - "/": answer 200 OK
@@ -57,10 +57,20 @@ The BAM stack is composed of :
     - Authent:
        - To the database with user/password
        - To Firebase with a key 
- - A PostgreSQL database
+ - **A PostgreSQL database**
     - Listen: 5432
     - Should have a db, user and password pre-configured
- - An external Firebase project, only used for user authentication
+ - **An external Firebase project, only used for user authentication**
     - With an existing project
     - The user that will need to use the BAM stack need to have proper access to this project
 
+# Targetted architecture
+
+For a first run we will target the following architecture:
+ - The app will be hosted in Google Cloud Platform
+ - In GCP we will deploy, using Terraform
+    - A Kubernetes cluster for the app itself
+    - A SQL database, apart from the cluster
+ - We will init Helm in the cluster (manually for now)
+ - And using Helm we will deploy a packaged version of the Dockerized verison of the app
+ - Which mean that the app need to be dockerized first
