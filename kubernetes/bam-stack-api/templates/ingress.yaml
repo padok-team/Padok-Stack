@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ include "bam-stack-api.fullname" . }}
+  labels:
+{{ include "bam-stack-api.labels" . | indent 4 }}
+spec:
+  tls:
+   - secretName: tls-secret
+     hosts:
+      - "bam-stack.api.com"
+  rules:
+   - host: "bam-stack.api.com"
+     http:
+       paths:
+        - path: /*
+          backend:
+            serviceName: {{ include "bam-stack-api.fullname" . }}
+            servicePort: 3000
+status:
+  loadBalancer:
+    ingress:
+     - {}
