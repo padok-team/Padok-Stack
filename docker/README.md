@@ -1,4 +1,7 @@
-# NOTE
+# NOTE & questions
+
+**Questions:**
+ - What file names are accepted for the api's config ?
 
 Include or link to staffme/dockerisation README.md.
 
