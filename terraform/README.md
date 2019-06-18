@@ -39,13 +39,16 @@ The 3 kinds of objects mentioned above:
  - yet they can interact to with one another
 
 **Network considerations:**
- - Sooner or later, we will want the apps in the Kubernetes cluster to be able to connect to the database
- - However:
-    - The cluster is for now deployed in the `default VPC`
-    - The database lies in the `Service Producer VPC`
- - So to enable private connections between apps and the database (i.e. without going through public Internet),
-   you need to peer the VPCs
- - **Careful:** don't try to ping the database to test its connectivity, because inter VPC pings may not be enabled
+ - **[DEPRECATED]**
+    - Sooner or later, we will want the apps in the Kubernetes cluster to be able to connect to the database
+    - However:
+       - The cluster is for now deployed in the `default VPC`
+       - The database lies in the `Service Producer VPC`
+    - So to enable private connections between apps and the database (i.e. without going through public Internet),
+      you need to peer the VPCs
+    - **Careful:** don't try to ping the database to test its connectivity, because inter VPC pings may not be enabled
+ - As of today we use instead the public address with a cloudsql proxy as a sidecar container inside the api pod
+   More information about this in the [kubernetes](../kubernetes/README.md) part
 
 Terraform design
 ----------------
@@ -203,7 +206,7 @@ Usage
  - Reuse of the default VPC
  - Update masq agent conf
 
-**Manual post configuration:**
+**[DEPRECATED: cloudsql proxy used instead] Manual post configuration:**
  - Once the database is created, you need to enable communication to it from the GKE cluster
  - In order to do that, go to the related admin page in GCP: [here](https://console.cloud.google.com/sql/instances/)
  - Select your new database
