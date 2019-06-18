@@ -11,7 +11,7 @@ data:
     cors_origin: false
     
     database:
-      host: 10.120.0.5
+      host: localhost
       port: 5432
       database: bam_stack_api
       username: docker

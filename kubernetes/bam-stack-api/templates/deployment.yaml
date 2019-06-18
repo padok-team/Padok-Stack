@@ -46,10 +46,26 @@ spec:
            - name: node-port
              containerPort: 3000
              protocol: TCP
+        - image: gcr.io/cloudsql-docker/gce-proxy:1.11
+          name: cloudsql-proxy
+          command:
+           - "/cloud_sql_proxy"
+           - "-instances={{ .Values.db.address }}=tcp:5432"
+           - "-credential_file=/secrets/cloudsql/postgres-admin-key.json"
+          securityContext:
+            runAsUser: 0
+            allowPriviledgeEscalation: false
+          volumeMounts:
+           - name: vol-proxy
+             mountPath: "/secrets/cloudsql/postgres-admin-key.json"
+             subPath: postgres-admin-key.json
       volumes:
        - name: vol-firebase
          secret:
            secretName: firebase
+       - name: vol-proxy
+         secret:
+           secretName: sql-proxy
        - name: vol-config
          configMap:
            name: {{ include "bam-stack-api.fullname" . }}
