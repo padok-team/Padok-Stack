@@ -1,7 +1,18 @@
-# 
+# Deploy the bam-stack-api in a GKE Kubernetes cluster using Helm
 
 The aim of this part is to install Helm, configure it and build required templates
 in order to Helm-package the dockerized version of the application.
+
+## Prerequisites
+
+This part require:
+ - Done with Terraform ([here](../terraform/README.md))
+    - A fully deployed GKE Kubernetes cluster
+    - A GCP database
+    - Proper NEtwork configuration so that apps in the cluster are able to communicate with the database
+ - Done with Docker ([here](../docker/README.md))
+    - The docker version of the bam-stack-api
+    - Firebase authentication
 
 ## Install and init Helm
 
@@ -66,6 +77,18 @@ Test the chart with:
      -> If your template is not valid, you may have uneasy error messages, that's the way it is...
  - `Helm lint` (TODO)
 
+### Secret management
+
+Bam-stack-api require an access to Firebase project, guaranteed by a key expected in json format.
+
+Since we ensured we had that key when making the [docker-related steps](../docker/README.md),
+we only need to create a secret with it and to provide this secret to our Chart through a volume mount.
+
+The volume mount is already configured in the `deployment.yaml` file in the chart's templates.
+
+As for the secret, you can create it like so:
+ - kubectl create secret generic firebase --from-file=firebase-key=<path_to_key>
+
 ### Deploy
 
 Prequisite: At first we will suppose that the image <GCR_IMAGE> dockerizing the API is available.
@@ -74,6 +97,12 @@ problems:
  - system:serviceaccount:kube-system:default
     -> Solved: with a dedicated Tiller service account created in Kubernetes
  - Deployment occured in the wrong namespace...
+    -> Default is for Helm to install the Chart in the current namespace
+    -> This can be overriden by using install / upgrade commands with the `--namespace` option
 
 Initial deployment:
- - helm install kubernetes
+ - helm install bam-stack-api
+
+Delete and deploy again (without using upgrade)
+ - helm delete <release-name>
+ - helm install bam-stack-api

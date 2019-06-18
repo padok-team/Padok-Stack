@@ -13,4 +13,4 @@ To make this happen you will have to:
      - Create a GKE Kubernetes cluster 
      - Create a GCP SQL Database
      - Create GCS buckets
- 3. [Deploy the app with Helm](README_kubernetes.md)
+ 3. [Deploy the app with Helm](kubernetes/README.md)
