@@ -202,3 +202,28 @@ Usage
  - Create of node pool
  - Reuse of the default VPC
  - Update masq agent conf
+
+**Manual post configuration:**
+ - Once the database is created, you need to enable communication to it from the GKE cluster
+ - In order to do that, go to the related admin page in GCP: [here](https://console.cloud.google.com/sql/instances/)
+ - Select your new database
+ - Go to the `Connexions` tab
+ - Select "private address" option
+ - Then select your VPC network (E.g. "default")
+ - Finaly click "save"
+    -> Note that this action may take several minutes to complete
+ - Once it's done, go back to the "Overview" tab
+ - You now see in the "Connect to instance" pannel that the instance has a private IP address
+ - This is the address you will use to connect to the database from the cluster
+ - You can test this connectivity if wou want:
+    - Run an Ubuntu pod in the cluster and run a bash process inside it:
+       - kubectl run test-connectivity-db --image=ubuntu --generator=run-pod/v1 --command -- sleep 25000
+       - k exec -it test-connectivity-db /bin/bash
+    - Install pgcli
+       - apt-get update
+       - apt-get install pgcli
+       - export LC_ALL=C.UTF-8i (required with the image we are using)
+       - export LANG=C.UTF-8
+    - Connect to the database: pgcli -h <database_private_IP> -p 5432 -U <database_user> -W -d <database_name>
+       - Note that the database_name is not the name of the GCP SQL instance, but the name of the database that was created inside it
+       - Refer to the Terraform db config if you don't know this name and the user and passwords configs
