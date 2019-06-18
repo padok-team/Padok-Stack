@@ -1,6 +1,6 @@
 # BAM stack in the cloud
 
-This project is about making BAM stack functional and easy to deploy in the cloud.
+This project is about making **BAM stack** functional and easy to deploy in the cloud.
 
 To make this happen you will have to:
  1. [Init & Dockerize the app](docker/README.md):
@@ -16,9 +16,51 @@ To make this happen you will have to:
 
 **Careful:** the part 3 won't work if you didn't complete part 1 and 2 first.
 
+# How we want to send the BAM stack to the cloud
+
+**Hypothesis:** A BAM stack project is created using the create-bam-stack repo that kind of duplicate itself in order to produce two child, isolated, repo.
+
+So this repo should give you everything you need (conf, READMEs, ...) to:
+ 1. Transform the app in the child repos into Dockerized apps
+ 2. Create every resource needed to deploy the app in the cloud
+
+# How to use this repo
+
+This repo contains three kind of things:
+ - Automatic processes, run from this repo
+    - In this case you just need to customize the configuration to your need,
+    - and run the proper tool with this conf (E.g Terraform)
+ - Automatic processes, run from create-bam-stack repo
+    - In this case you first need to copy some files to the targetted repo,
+    - then to customize configuration
+    - And then finaly to run the tool (E.g. Docker)
+ - Manual processes
+    - Described within READMEs
+
+So just follow the READMEs mentioned at the beginning of this page and be ready to perform either manual or automatic processes, either in this repo or in the child ones.  
+
 # Brief about the BAM stack
 
 The BAM stack is composed of :
  - The Node app the user will send request to
+    - Listen: 3000
+    - Answer to URL:
+       - "/": answer 200 OK
+       - "/graphql": display a webpage where you can make requests
+    - config:
+       - Format: YAML
+       - Params:
+          - db_host
+          - db_name
+          - user
+          - password
+    - Authent:
+       - To the database with user/password
+       - To Firebase with a key 
  - A PostgreSQL database
- - AN external Firebase project, only used for user authentication
+    - Listen: 5432
+    - Should have a db, user and password pre-configured
+ - An external Firebase project, only used for user authentication
+    - With an existing project
+    - The user that will need to use the BAM stack need to have proper access to this project
+
