@@ -13,5 +13,5 @@ spec:
       procotol: TCP
   selector:
     # TODO Ask for the aim of these tags
-    app.bam-stack-api.io/name: {{ include "bam-stack-api.name" . }}
+    app.bam-stack-api.io/name: {{ include "bam-stack-api.fullname" . }}
     app.bam-stack-api.io/instance: {{ .Release.Name }}
