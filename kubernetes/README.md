@@ -50,7 +50,7 @@ Then perform the following commands:
 ### Init
 
 For test purposes you can just perform the following command:
- - `Helm init --service-account tiller`
+ - `helm init --service-account tiller`
 
 Careful: As you can see, we Helm to initialize Tiller with the service account we created earlier. 
 
@@ -75,7 +75,7 @@ Test the chart with:
      -> If your template is not valid, you may have uneasy error messages, that's the way it is...
  - `Helm lint` (TODO)
 
-### TLS secrets
+### TLS key and certificate
 
 In order to enable HTTPS connection to the app we will configure the Ingress' TLS support.
 
@@ -107,13 +107,13 @@ we only need to create a secret with it and to provide this secret to our Chart 
 
 The volume mount is already configured in the `deployment.yaml` file in the chart's templates.
 
-As for the secret, you can create it like so:
+As for the **firebase secret** itself, you can create it like so:
  - kubectl create secret generic firebase --from-file=firebase-key=<path_to_key>
 
-The same way we will create a secret for the cloudsql proxy:
+The same way we will create a ecret for the **cloudsql proxy**:
  - kubectl create secret generic sql-proxy --from-file=postgres-admin-key.json=<path_to_key>
 
-And finaly for the TLS credentials:
+And finaly for the **TLS credentials**:
  - kubectl create secret tls tls-secret --cert=<path_to_cert> --key=<path_to_key>
 
 ### Deploy
