@@ -7,20 +7,20 @@ metadata:
 data:
   parameters.yml.dist: |
 
-    listen_port: 3000
+    listen_port: {{ .Values.api.port }}
     cors_origin: false
     
     database:
       host: localhost
       port: 5432
-      database: bam_stack_api
-      username: docker
-      password: docker
+      database: {{ .Values.db.name }}
+      username: {{ .Values.db.user }}
+      password: {{ .Values.db.password }}
     
     cheat_bearer: null
     
     firebase:
-      service_account_path: './config/firebase-adminsdk.json'
+      service_account_path: './config/{{ .Values.firebase.key  }}'
     
     apollo:
       playground: true

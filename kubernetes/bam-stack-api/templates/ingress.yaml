@@ -16,7 +16,7 @@ spec:
         - path: /*
           backend:
             serviceName: {{ include "bam-stack-api.fullname" . }}
-            servicePort: 3000
+            servicePort: {{ .Values.service.port }}
 status:
   loadBalancer:
     ingress:

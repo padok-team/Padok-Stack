@@ -18,5 +18,14 @@ service:
   port: 3000
 
 db:
-  address: padok-training-lab:europe-west4:rpx-test-database-04
+  address: padok-training-lab:europe-west4:rpx-test-database-05
   port: 5432
+  name: bam_stack_api
+  user: docker
+  password: docker
+
+api:
+  port: 3000
+
+firebase:
+  key: firebase-adminsdk.json

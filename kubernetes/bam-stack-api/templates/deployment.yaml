@@ -33,18 +33,16 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-#          env:
-#           -
           volumeMounts:
            - name: vol-config
              mountPath: "/opt/app/config/default.yaml"
              subPath: parameters.yml.dist
            - name: vol-firebase
-             mountPath: "/opt/app/config/firebase-adminsdk.json"
+             mountPath: "/opt/app/config/{{ .Values.firebase.key }}"
              subPath: firebase-key
           ports:
            - name: node-port
-             containerPort: 3000
+             containerPort: {{ .Values.api.port }}
              protocol: TCP
           livenessProbe:
             httpGet:
