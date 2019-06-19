@@ -1,0 +1,38 @@
+steps:
+# # Clone the repo
+# - name: 'gcr.io/cloud_builders/git'
+#   args: 
+#    - 'clone'
+#    - '$_CUSTOM_GIT_REPO'
+
+ # Install
+ - name: 'node:11.15.0'
+   entrypoint: yarn
+   args:
+    - 'install'
+
+ # Build
+ - name: 'node:11.15.0'
+   entrypoint: yarn
+   args:
+    - '$_CUSTOM_YARN_BUILD'
+
+ # Deploy
+ - name: 'gcr.io/cloud-builders/gsutil'
+   args:
+    - 'rsync'
+    - '-d'
+    - '$_CUSTOM_DIST'
+    - 'gs://$_CUSTOM_BUCKET/$_CUSTOM_DIST'
+
+timeout: '1200s'
+substitutions:
+  # Front-office
+  _CUSTOM_YARN_BUILD: 'prod:build'
+  _CUSTOM_DIST: dist
+  _CUSTOM_BUCKET: '87dcfd89-5cb4-44d8-a26a-3cacd488f92c'
+
+  # Back-office
+  #_CUSTOM_YARN_BUILD: 'build'
+  #_CUSTOM_DIST: build
+  #_CUSTOM_BUCKET: '9ba2e5ea-0adb-4b30-984d-e043b236ca6d'
