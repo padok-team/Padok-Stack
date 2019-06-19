@@ -39,7 +39,8 @@ steps:
     - 'TILLERLESS=false'
     - 'TILLER_NAMESPACE=kube-system'
 timeout: '1200s'
-
+image:
+ - 'gcr.io/$PROJECT_ID/$_CUSTOM_API_IMAGE:$COMMIT_SHA'
 substitutions:
   _CUSTOM_REGION: europe-west4
   _CUSTOM_CLUSTER: bam-stack-api
