@@ -1,10 +1,48 @@
 steps:
  # Building the API image
  - name: 'gcr.io/cloud_builders/docker'
-   env:
-    - 'CGP_PROJECT=padok-training-lab'
    args: 
     - 'build'
     - '-t'
-    - 'gcr.io/$GCP_PROJECT/bam-stack-api:$COMMIT_SHA'
+    - 'gcr.io/$PROJECT_ID/$_CUSTOM_API_IMAGE:$COMMIT_SHA'
     - '.'
+
+ # Pushing the API image to Google cloud registry
+ - name: 'gcr.io/cloud-builders/docker'
+   args:
+    - 'push'
+    - 'gcr.io/$PROJECT_ID/$_CUSTOM_API_IMAGE:$COMMIT_SHA'
+
+ # Configure a kubeclt workspace for this project
+ - name: 'gcr.io/cloud-builders/kubectl'
+   args:
+    - 'cluster-info'
+   env:
+    - 'CLOUDSDK_COMPUTE_REGION=$_CUSTOM_REGION'
+    - 'CLOUDSDK_CONTAINER_CLUSTER=$_CUSTOM_CLUSTER'
+    - 'KUBECONFIG=/workspace/.kube/config'
+
+ # Deploy with Helm
+ - name: 'gcr.io/$PROJECT_ID/helm'
+   args:
+    - 'upgrade'
+    - '-i'
+    - 'api-v1-release'
+    - './$_CUSTOM_API_CHART'
+    - '--debug'
+    - '--set'
+    - 'image.repository=gcr.io/$PROJECT_ID/$_CUSTOM_API_IMAGE,image.tag=$COMMIT_SHA'
+    - '-f'
+    - './$_CUSTOM_API_CHART/values.$_CUSTOM_ENV.yaml'
+   env:
+    - 'KUBECONFIG=/workspace/.kube/config'
+    - 'TILLERLESS=false'
+    - 'TILLER_NAMESPACE=kube-system'
+timeout: '1200s'
+
+substitutions:
+  _CUSTOM_REGION: europe-west4
+  _CUSTOM_CLUSTER: bam-stack-api
+  _CUSTOM_API_IMAGE: bam-stack-api
+  _CUSTOM_API_CHART: bam-stack-api
+  _CUSTOM_ENV: staging
