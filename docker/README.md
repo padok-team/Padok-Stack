@@ -84,7 +84,7 @@ But before you can use it, you may to make some customize the script a little:
     36: #fi
 ```
   - If you don't want travis config:
-```
+```bash
     43: #echo "Opening GitHub to configure Travis... Add $API_PROJECT_NAME and $BACKOFFICE_PROJECT_NAME to the list of selected repositories."
     44: #open "https://github.com/organizations/bamlab/settings/installations/209171"
 ```
