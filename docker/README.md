@@ -64,7 +64,7 @@ and therefore repo-api and repo-bo.
 
 First, clone **repo-bam** in an new directory named after your project,
 and go inside it:
-```
+```bash
 $ git clone https://github.com/bamlab/create-bam-stack.git <project_name>
 $ cd <project_name>
 ```
@@ -75,23 +75,23 @@ But before you can use it, you may to make some customize the script a little:
 
 - Comment the following lines in the script:
   - If you don't want to push the new repo to BAM GitHub repos:
-```
-    31: if ! [ -x "$(command -v hub)" ]; then
-    32:   echo "Hub is not installed. You'll need to create the GitHub project $NAME manually." >&2
-    33: else
-    34:   hub create -p "bamlab/$NAME"
-    35:   git push -u origin master
-    36: fi
+```bash
+    31: #if ! [ -x "$(command -v hub)" ]; then
+    32: #  echo "Hub is not installed. You'll need to create the GitHub project $NAME manually." >&2
+    33: #else
+    34: #  hub create -p "bamlab/$NAME"
+    35: #  git push -u origin master
+    36: #fi
 ```
   - If you don't want travis config:
 ```
-    43: echo "Opening GitHub to configure Travis... Add $API_PROJECT_NAME and $BACKOFFICE_PROJECT_NAME to the list of selected repositories."
-    44: open "https://github.com/organizations/bamlab/settings/installations/209171"
+    43: #echo "Opening GitHub to configure Travis... Add $API_PROJECT_NAME and $BACKOFFICE_PROJECT_NAME to the list of selected repositories."
+    44: #open "https://github.com/organizations/bamlab/settings/installations/209171"
 ```
 
 Then run the script:
 
-```
+```bash
 $ ./setup.sh
 
 # Answer to questions:
@@ -103,7 +103,7 @@ $ ./setup.sh
 
 Now if you look inside the current dir you will an output like the following:
 
-```
+```bash
 $ ls -l .
 
   total 64
@@ -133,7 +133,7 @@ From now on we won't need the **repo-bam** any more,
 so you can clean up this dir by removing any file (including hidden ones) whose name doesn't start with "<project_name>",
 for example with the following command:
 
-```
+```bash
 # The command bellow can be explained like this:
 #  - First "ls -l | grep -v testtest will output the name of the files and dirs to be removed
 #  - Then "xargs rm -r" will deletes every file / dir provided through its standard input
@@ -151,7 +151,7 @@ If you'r using VSCode or any other IDE, you can use its refactoring capabilities
 
 If you are not, you can also use a commands like the following:
 
-```
+```bash
 # **Note:** the two commands bellow perform the following actions:
 #  - Find occurrences of myproject (recp. MyProject) in the newly created GIT repos
 #  - Cut the lines in order to keep only the file names
@@ -168,7 +168,7 @@ $ grep -r MyProject <project_name>-* | cut -d ':' -f 1 | sort | uniq | xargs sed
 
 You should en up with the following in the current dir:
 
-```
+```bash
 $ ls -l
 
   total 8
@@ -203,7 +203,7 @@ Any command may still fail however if you don't set the proper configuration val
 
 In order to do that you will use the config example available in the repo-padok:
 
-```
+```bash
 $ rm repo-api/config/*
 $ cp repo-padok/docker/config/default.yaml repo-api/config
 ```
@@ -255,14 +255,15 @@ Which means you only have to go to the repo-api dir and perform on of the follow
  - `docker-compose node-lr`: for a debug-like environment
 
 For example, if you want to launch the node-lr version
-```
+
+```bash
 $ cd repo-api
 $ docker-compose node-lr
 ```
 
 **Tip:** Just ad `-d` flag if you don't want docker-compose to stay in the foreground
 
-```
+```bash
 $ docker-compose -d node-lr
 ```
 
@@ -272,7 +273,7 @@ If every went fine in the previous part and you api is now listenning, let's say
 
 You can check if it's working with a curl:
 
-```
+```bash
 $ curl -i localhost:3000
 ```
 
