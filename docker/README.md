@@ -11,8 +11,8 @@ This project is about making the BAM stack run in a Dockerized environment.
 
 We will proceed in 2 steps :
 
-1. Init a BAM stack, using the BAM method and repo (Careful: we won't use all steps of the BAM method)
-2. Add / modify the required files so that the stack will run in Docker
+1. **Init a BAM stack**, using the BAM method and repo (Careful: we won't use all steps of the BAM method)
+2. **Add / modify the required files** so that the stack will run in Docker
 
 ## About multpiple Git repos and their naming
 
@@ -23,8 +23,8 @@ each pre-populated with a set of sources from the create-bam-stack repo itself.
 
 Those two repos will be dedicates to two different part of the new project:
 
-1. The API
-2. THe backoffice
+1. **The API**
+2. **The backoffice**
 
 And then there is the repo whose README you'r currently reading ;-)
 So that's 4 different repos...
@@ -47,11 +47,11 @@ Variables will always be noted between a `<` and a `>`.
 For exemple the variable whose name is "toto" will be written `<toto>` in any section, any paragraph or code sample.
 
 Among the variable that we will use, we can identify:
-- <project_name> : your project's name, written in a raw form (no spaces)
-- <beautiful_project_name> : also your project name but maybe camel cased so it will be easier to read (no spaced)
+- **<project_name>:** your project's name, written in a raw form (no spaces)
+- **<beautiful_project_name>:** also your project name but maybe camel cased so it will be easier to read (no spaced)
 
 **Note:**
-- Repos are a special case of variable. To simplify the writting we will use for example "repo-padok" to indicate both the repo and its path.
+- Repos are a special case of variable. To simplify the writting we will use for example **"repo-padok"** to indicate both the **repo** and **its path**.
   The goes for the other repos names.
   So you may find "repo-padok" written in code sample, and in this case it means the path to the repo-padok, and note just the string "repo-padok"
 
@@ -75,16 +75,19 @@ But before you can use it, you may to make some customize the script a little:
 
 - Comment the following lines in the script:
   - If you don't want to push the new repo to BAM GitHub repos:
-    + 31: if ! [ -x "$(command -v hub)" ]; then
-    + 32:   echo "Hub is not installed. You'll need to create the GitHub project $NAME manually." >&2
-    + 33: else
-    + 34:   hub create -p "bamlab/$NAME"
-    +  35:   git push -u origin master
-    + 36: fi
-
+```
+    31: if ! [ -x "$(command -v hub)" ]; then
+    32:   echo "Hub is not installed. You'll need to create the GitHub project $NAME manually." >&2
+    33: else
+    34:   hub create -p "bamlab/$NAME"
+    35:   git push -u origin master
+    36: fi
+```
   - If you don't want travis config:
-    + 43: echo "Opening GitHub to configure Travis... Add $API_PROJECT_NAME and $BACKOFFICE_PROJECT_NAME to the list of selected repositories."
-    + 44: open "https://github.com/organizations/bamlab/settings/installations/209171"
+```
+    43: echo "Opening GitHub to configure Travis... Add $API_PROJECT_NAME and $BACKOFFICE_PROJECT_NAME to the list of selected repositories."
+    44: open "https://github.com/organizations/bamlab/settings/installations/209171"
+```
 
 Then run the script:
 
@@ -123,8 +126,8 @@ $ ls -l .
 
 Great ! As you can see around the end of the output there two new directories, corresponding to two new repos:
 
- - <project_name>-api : it's **the repo-api**
- - <project_name>-backoffice : it's the **repo-bo**
+ - **<project_name>-api:** it's **the repo-api**
+ - **<project_name>-backoffice:** it's the **repo-bo**
 
 From now on we won't need the **repo-bam** any more,
 so you can clean up this dir by removing any file (including hidden ones) whose name doesn't start with "<project_name>",
