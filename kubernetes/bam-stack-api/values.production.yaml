@@ -27,11 +27,11 @@ api:
 ##### OWNER DEV #####
 #####################
 db:
-  address: padok-training-lab:europe-west4:rpx-test-database-05
+  address:
   port: 5432
   name: bam_stack_api
-  user: docker
-  password: docker
+  user: 
+  password: 
 
 firebase:
   key: firebase-adminsdk.json

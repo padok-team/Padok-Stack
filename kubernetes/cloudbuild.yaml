@@ -46,4 +46,5 @@ substitutions:
   _CUSTOM_CLUSTER: bam-stack-api
   _CUSTOM_API_IMAGE: bam-stack-api
   _CUSTOM_API_CHART: bam-stack-api
-  _CUSTOM_ENV: staging
+  _CUSTOM_ENV: staging 
+# production environment also available 
