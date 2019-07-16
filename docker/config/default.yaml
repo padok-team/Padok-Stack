@@ -2,7 +2,7 @@ listen_port: 3000
 cors_origin: http://localhost:3001
 
 database:
-  host: db
+  host: database
   port: 5432
   database: testremi
   username: docker
