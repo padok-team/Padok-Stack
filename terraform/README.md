@@ -93,6 +93,8 @@ We rely on the following external community maintained modules:
 * [kubernetes-engine](https://registry.terraform.io/modules/terraform-google-modules/kubernetes-engine/google/3.0.0)
 * [sql-db](https://registry.terraform.io/modules/GoogleCloudPlatform/sql-db/google/1.2.0)
 
+Before runing the following commands, make sure to replace every occurence of `<company_name>`, `<production_project_name>` and `<staging_project_name>` in every file under `production` and `staging` with appropriate values.
+
 To create a resource, go to the `<environment>/<resource>` directory and run the following comands:
 * Initialize terraform:
 ```shell

@@ -1,5 +1,5 @@
 variable "credentials" {
-  default = "../../production-terraform-credentials.json"
+  default = "../../<production_project_name>-terraform-credentials.json"
 }
 variable "project_id" {
   default = "<production_project_name>"
