@@ -129,4 +129,5 @@ $ gsutil iam ch serviceAccount:<app_service_account_name>@"$GCP_PROJECT".iam.gse
 
 To configure `kubectl` to use the created cluster:
 ```shell
-$ gcloud container clusters get-credentials gke-cluster --region europe-west4 --project "$GCP_PROJECT"```
+$ gcloud container clusters get-credentials gke-cluster --region europe-west4 --project "$GCP_PROJECT"
+```
