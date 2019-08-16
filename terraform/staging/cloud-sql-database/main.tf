@@ -6,7 +6,7 @@ terraform {
   }
 }
 
-module "clind_database" "clind_staging_database" {
+module "<company_name>_database" "<staging_project_name>_database" {
   source        = "../../modules/cloud-sql-database"
   tier          = "db-f1-micro"
   name          = "database"

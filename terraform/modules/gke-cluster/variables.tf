@@ -2,6 +2,14 @@ variable "name" {
   description = "The name of the cluster (required)"
 }
 
+variable "region" {
+  default          = "europe-west4"
+}
+
+variable "project_id" {
+
+}
+
 variable "description" {
   description = "The description of the cluster"
   default     = ""
@@ -205,19 +213,4 @@ variable "monitoring_service" {
 variable "service_account" {
   description = "The service account to run nodes as if not overridden in `node_pools`. The default value will cause a cluster-specific service account to be created."
   default     = "create"
-}
-
-variable "basic_auth_username" {
-  description = "The username to be used with Basic Authentication. An empty value will disable Basic Authentication, which is the recommended configuration."
-  default     = ""
-}
-
-variable "basic_auth_password" {
-  description = "The password to be used with Basic Authentication."
-  default     = ""
-}
-
-variable "issue_client_certificate" {
-  description = "Issues a client certificate to authenticate to the cluster endpoint. To maximize the security of your cluster, leave this option disabled. Client certificates don't automatically rotate and aren't easily revocable. WARNING: changing this after cluster creation is destructive!"
-  default     = "false"
 }
