@@ -1,9 +1,9 @@
 variable "credentials" {
-  default = "../../staging-terraform-credentials.json"
+  default = "../../<staging_project_name>-terraform-credentials.json"
 }
 
 variable "project_id" {
-  default = "<project>-staging"
+  default = "<staging_project_name>"
 }
 
 variable "region" {

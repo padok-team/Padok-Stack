@@ -1,232 +1,130 @@
-TODO list
----------
+# Terraform
 
- - Use security group for API -> db comm ? (is this concept limited to AWS or also available with GCP)
- - DB with auto backups ?
- - List all required APIs and autorizations
- - Check that the created cluster is configured the way we want it to be: c.f. params values
- - bucket: use bucket-level authorization strategy ?
-    -> How to do it ?
- - Create a custom `VPC` ?
+We use terraform to create Google Cloud resources such as buckets and Google Kubernetes Engine clusters.
 
- - Previously done:
-    - Cluster multi-master -> Available through "regional" clusters
-    - Delete the default node pool -> done through Terraform module conf
-    - Complete database tests -> Only one still KO but it's about external access to the database
+**Table of contents:**
+* [Install](#install)
+* [Set up and configuration](#set-up-and-configuration)
+  * [GCP Project name](#gcp-project-name)
+  * [Google Cloud APIs](#google-cloud-apis)
+  * [Service account](#service-account)
+  * [State bucket](#state-bucket)
+* [Create resources with terraform](#create-resources-with-terraform)
+* [Inspect created resources](#inspect-created-resources)
+* [Buckets access](#buckets-access)
 
-Goals
------
+## Install
 
-**We currently want to use Terraform to provision 3 kinds of objects:**
- - PostgreSQL databases
- - Kubernetes clusters (without the apps)
- - Google Cloud Storage buckets
+To install terraform, run the following:
+```shell
+$ wget https://releases.hashicorp.com/terraform/0.11.14/terraform_0.11.14_linux_amd64.zip
+$ unzip terraform_0.11.14_linux_amd64.zip
+$ sudo mv terraform /opt/terraform_0.11.4
+$ sudo ln -s /opt/terraform_0.11.4 /usr/local/bin/terraform_0.11.4
+```
+_We currently use terraform 0.11.4 because terraform 0.12.X introduced breaking changes and all the Google Cloud terraform modules we use are not currently compatible vith terraform 0.12.X_
 
-Prerequisite
-------------
+## Set up and configuration
 
-This Terraform project require the availability of the following resources:
- - A GCP project
- - A GCS bucket for Terraform backend
- - A service account with access to this project
- - The required APIs are activated
+### GCP Project name
 
-GCP design
-----------
+To keep the commands in this README ad generic as possible, we use the `GCP_PROJECT` environment variable, you can set it with:
+```shell
+$ export GCP_PROJECT=<project_name>
+```
+We recommand the following convention:
+* Staging project name : `<company>-staging`
+* Production project name : `<company>-production`
 
-The 3 kinds of objects mentioned above:
- - belong to 3 different GCP functionalities
- - yet they can interact to with one another
+### Google Cloud APIs
 
-**Network considerations:**
- - **[DEPRECATED]**
-    - Sooner or later, we will want the apps in the Kubernetes cluster to be able to connect to the database
-    - However:
-       - The cluster is for now deployed in the `default VPC`
-       - The database lies in the `Service Producer VPC`
-    - So to enable private connections between apps and the database (i.e. without going through public Internet),
-      you need to peer the VPCs
-    - **Careful:** don't try to ping the database to test its connectivity, because inter VPC pings may not be enabled
- - As of today we use instead the public address with a cloudsql proxy as a sidecar container inside the api pod
-   More information about this in the [kubernetes](../kubernetes/README.md) part
+To use terraform, you need to activate some Google Cloud APIs:
+```shell
+$ gcloud services enable sqladmin.googleapis.com --project="$GCP_PROJECT"
+$ gcloud services enable compute.googleapis.com --project="$GCP_PROJECT"
+$ gcloud services enable servicenetworking.googleapis.com --project="$GCP_PROJECT"
+$ gcloud services enable cloudresourcemanager.googleapis.com --project="$GCP_PROJECT"
+$ gcloud services enable container.googleapis.com --project="$GCP_PROJECT"
+```
 
-Terraform design
-----------------
+### Service account
 
-**We will do this using Terraform modules:**
- - Available on the Terraform public registry: https://registry.terraform.io/
- - Verified by HashiCorp
+To use terraform, you need a keyfile from a service account with appropriate roles to create the GCP resources. If the service account has already been created, you only need to create and download a keyfile (last step):
+* Create the terraform service account:
+```shell
+$ gcloud iam service-accounts create terraform --project="$GCP_PROJECT"
+```
+* Grant it the roles required to create GCP resources
+  * To create buckets:
+  ```shell
+  $ gcloud projects add-iam-policy-binding "$GCP_PROJECT" --member serviceAccount:terraform@"$GCP_PROJECT".iam.gserviceaccount.com --role roles/storage.admin
+  ```
+  * To create CloudSQL databases:
+  ```shell
+  $ gcloud projects add-iam-policy-binding "$GCP_PROJECT" --member serviceAccount:terraform@"$GCP_PROJECT".iam.gserviceaccount.com --role roles/cloudsql.admin
+  ```
+  * To create GKE clusters:
+  ```shell
+  $ gcloud projects add-iam-policy-binding "$GCP_PROJECT" --member serviceAccount:terraform@"$GCP_PROJECT".iam.gserviceaccount.com --role roles/compute.admin
+  $ gcloud projects add-iam-policy-binding "$GCP_PROJECT" --member serviceAccount:terraform@"$GCP_PROJECT".iam.gserviceaccount.com --role roles/container.admin
+  $ gcloud projects add-iam-policy-binding "$GCP_PROJECT" --member serviceAccount:terraform@"$GCP_PROJECT".iam.gserviceaccount.com --role roles/iam.serviceAccountUser
+  ```
+* download a json keyfile for the service account:
+```shell
+$ gcloud iam service-accounts keys create "$GCP_PROJECT"-terraform-credentials.json --iam-account=terraform@"$GCP_PROJECT".iam.gserviceaccount.com
+```
+_Execute this last command in the same directory as this README._
 
-**3 useful modules have been identified so far:**
- - sql-db:
-    - URL: https://registry.terraform.io/modules/GoogleCloudPlatform/sql-db/google/1.1.1
-    - Provide:
-       - GCP hosted SQL databases (either MySQL or PostgreSQL)
-       - Database user account
- - kubernetes-engine:
-    - URL: https://registry.terraform.io/modules/terraform-google-modules/kubernetes-engine/google/2.1.0
-    - Provide:
-       - Kubernetes cluster and node pools provioning
-       - Service account creation
- - vpc:
-    - URL: https://registry.terraform.io/modules/terraform-google-modules/network/google/0.8.0
-    - Provide:
-       - VPC creation
+### State bucket
 
-**Actual Terraform configuration:**
- - The cluster_kube config was made using an exemple from the following post:
-    -> https://github.com/terraform-providers/terraform-provider-google/issues/3746
-   and so looks a lot better...
- - The db and buckets configs was done the same way
+You need a bucket to store terraform state. Create the bucket with:
+```shell
+$ gsutil mb -p "$GCP_PROJECT" -c regional -l europe-west4 gs://"$GCP_PROJECT"-terraform-state/
+```
+Grant access to the bucket to the terraform service account:
+```shell
+$ gsutil iam ch serviceAccount:terraform@"$GCP_PROJECT".iam.gserviceaccount.com:legacyBucketOwner gs://"$GCP_PROJECT"-terraform-state/
+```
 
-**Targetted Terraform configuration:**
- - The same way it's done for cluster_kube config
- - For now, and to keep it simple, the configuration of sub-components are separated
-    - So there is less dependencies between them
-    - So we can, if needed, use different Terraform version for 2 different sub-component
- - Using 5 config files
-    - `terraform.tf`: Terraform main conf. As of today only only backend conf.
-    - `providers.tf`: currently defining google and google-beta providers
-    - `modules.tf:` use of required module based on input variables defined elsewere
-    - `variables.tf:` input variables definitions
-    - `vars.auto.tfvars:` input variables assignments
-    - `main.tf`: resources not defined through module usage
+## Create resources with terraform
 
-Compatibility
--------------
+We use terraform to create the GKE cluster, the CloudSQL database and the media and user buckets, for both staging and production environments.
+We rely on the following external community maintained modules:
+* [kubernetes-engine](https://registry.terraform.io/modules/terraform-google-modules/kubernetes-engine/google/3.0.0)
+* [sql-db](https://registry.terraform.io/modules/GoogleCloudPlatform/sql-db/google/1.2.0)
 
-**We cannot currently use Terraform last version:**
- - Terraform v0.12.x
-    - Include breaking changes
-    - v0.12 was released around may 20th, 2019
- - The modules mentioned above are therefore not yet compatibles with Terraform v0.12
-    -> But they are compatible with the latest v0.11.x version: v0.11.4
-    -> So we will use Terraform v0.11.4 whenever needed, until the necessary module updates are released
+To create a resource, go to the `<environment>/<resource>` directory and run the following comands:
+* Initialize terraform:
+```shell
+$ terraform_0.11.4 init
+```
+* Generate a plan:
+```shell
+$ terraform_0.11.4 plan -out config.tfplan
+```
+* Apply the plan (create/edit the resources):
+```shell
+$ terraform_0.11.4 apply config.tfplan
+```
 
-We will however use the latest version for compatible configs (E.g. buckets).
+## Inspect created resources
 
-Authentication & authorization
-------------------------------
+You can check the resources you created on the Google Cloud Console:
 
-**Terraform access to GCP:**
- - In order for Terraform to be able to use GCP APIs, you need to:
-    - have a service account
-    - download the associated API key
-    - set the "credentials" variable in `vars_gen.auto.tfvars` file to the path of the key
- - Note that for testing purposes you can use the default service account of the padok-training-lab project
+* GKE cluster: [here](https://console.cloud.google.com/kubernetes/list)
+* CloudSQL database: [here](https://console.cloud.google.com/sql/instances)
+* Buckets: [here](https://console.cloud.google.com/storage/browser)
 
-**GCP required APIs:**
- - gke
- - gcp sql
- - TODO list other required APIs
+## Buckets access
 
-**GCP authorizations:**
- - module.gke.google_project_iam_member.cluster_service_account-log_writer: 1 error occurred:
-	* google_project_iam_member.cluster_service_account-log_writer: Error applying IAM policy for project "padok-training-lab": Error setting IAM policy for project "padok-training-lab": googleapi: Error 403: The caller does not have permission, forbidden
-   => Note required if we use an existing service account
+The first time you create the buckets, you have to set their IAM policies for the service account that the app will be using:
+```shell
+$ gsutil iam ch serviceAccount:<app_service_account_name>@"$GCP_PROJECT".iam.gserviceaccount.com:legacyBucketOwner gs://"$GCP_PROJECT"-frontoffice/
+$ gsutil iam ch serviceAccount:<app_service_account_name>@"$GCP_PROJECT".iam.gserviceaccount.com:legacyBucketOwner gs://"$GCP_PROJECT"-backoffice/
+```
 
-Tests
------
+## Cluster kube context
 
-**Test on the cluster_kube config:**
- - Create a cluster and a VPC network: **OK**
- - Create a cluster, using the default VPC network: **OK**
- - Create a regional cluster: **OK**
-    - Region: europe-west4
-    - Zones: <region>-<a,b,c>
-    - 1 node in each zone
- - Perform regular operational actions on the cluster: **OK**
-    - gcloud ... get-credentials -> gives kubectl the proper credentials
-    - kubectl get no -> all node are running
-    - kubectl get po -> all admin pods are running, with all containers ready
-    - kubectl exec -> OK
- - Terraform plan when the cluster is already there: **Not that good**
-    - The module want to create new object even if they already exist
-    - Why ?
- - Terraform import when the .tfstate file was lost or corrupted: **KO**
-    Error message: "Error: Provider "kubernetes" depends on non-var "local.cluster_endpoint". Providers for import can currently
-      only depend on variables or must be hardcoded. You can stop import
-      fro m loading configurations by specifying `-config=""`."
-
-
-**Test on the buckets config:**
- - Create 2 buckets: **OK**
- - Terraform plan when the cluster is already there: **OK**
-    - Updated in case of minor changes
-    - Unchanged when there are no changes to apply
- - Terraform import when the .tfstate file was lost or corrupted: **OK**
-    - The "force_destroy" field is not imported though
-    - However it seems to be without impact on instances,
-    - and doesn't trigger a re-creation on later plan / apply
- - Terraform import when the .tfstate file is OK: **OK**
-    - Terraform detect the resource already exist
-
-**Test on the database:**
- - Deploy a PostgreSQL database: **OK**
- - Define database name: **OK**
- - Define user name and password: **OK**
- - Connect to the database from **inside** the cluster: **OK**
-    - with private IP + peering network
- - Connect to the database from **outside** the cluster: **KO**
- - Terraform plan when the cluster is already there: **OK**
-    - The user seams to always be re-created: probably because of the password definition
-    - The database zone preference is always updated, even if not defined in the first place
-      Probably because GCP automatically assign one in the chosen region upon creation
- - Terraform import when the .tfstate file is OK: **Not that bad**
-    - The database_instance object is imported and only a little update will be trigger on next plan / apply
-    - The database object is fully and correctly imported
-    - The user object is imported but will need an update...
-    - The password doesn't seem to be imortable...
-
-Usage
------
-
-**Actions:**
- - Download Terraform v0.11.4 from the following URL:
-    -> https://releases.hashicorp.com/terraform/0.11.14/terraform_0.11.14_linux_amd64.zip
- - Unzip, then copy the binary to /opt folder (for example) under the name "terraform_0.11.4"
- - ln -s /opt/terraform_0.11.4 /usr/local/bin/terraform_0.11.4
- - Update Terraform conf to your need, if needed:
-    - Especially the `credential` var in `vars_gen.auto.tfvars`
- - From a directory containing terraform conf (e.g. ./db or ./cluster_kube/):
-    - terraform_0.11.4 init
-    - terraform_0.11.4 plan -out config.tfplan
-    - terraform_0.11.4 apply config.tfplan
-   Available conf dirs:
-    - `./db`: deploy the database
-    - `./cluster_kube`: deploy the Kubernetes cluster
-    - `./buckets`: deploy 2 buckets
-   **Careful**: use Terraform v0.12.x for buckets deployment
- - Update kubernetes conf
-    - gcloud container clusters --region europe-west4 get-credentials bam-stack-api
-
-**Expected result:**
- - Create of a kubernetes master node (or more than one ?)
- - Create of node pool
- - Reuse of the default VPC
- - Update masq agent conf
-
-**[DEPRECATED: cloudsql proxy used instead] Manual post configuration:**
- - Once the database is created, you need to enable communication to it from the GKE cluster
- - In order to do that, go to the related admin page in GCP: [here](https://console.cloud.google.com/sql/instances/)
- - Select your new database
- - Go to the `Connexions` tab
- - Select "private address" option
- - Then select your VPC network (E.g. "default")
- - Finaly click "save"
-    -> Note that this action may take several minutes to complete
- - Once it's done, go back to the "Overview" tab
- - You now see in the "Connect to instance" pannel that the instance has a private IP address
- - This is the address you will use to connect to the database from the cluster
- - You can test this connectivity if wou want:
-    - Run an Ubuntu pod in the cluster and run a bash process inside it:
-       - kubectl run test-connectivity-db --image=ubuntu --generator=run-pod/v1 --command -- sleep 25000
-       - k exec -it test-connectivity-db /bin/bash
-    - Install pgcli
-       - apt-get update
-       - apt-get install pgcli
-       - export LC_ALL=C.UTF-8i (required with the image we are using)
-       - export LANG=C.UTF-8
-    - Connect to the database: pgcli -h <database_private_IP> -p 5432 -U <database_user> -W -d <database_name>
-       - Note that the database_name is not the name of the GCP SQL instance, but the name of the database that was created inside it
-       - Refer to the Terraform db config if you don't know this name and the user and passwords configs
+To configure `kubectl` to use the created cluster:
+```shell
+$ gcloud container clusters get-credentials gke-cluster --region europe-west4 --project "$GCP_PROJECT"```

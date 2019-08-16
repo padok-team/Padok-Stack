@@ -1,13 +1,13 @@
 terraform {
   backend "gcs" {
-    credentials     = "../../staging-terraform-credentials.json"
-    bucket          = "<state_bucket_name>"
+    credentials     = "../../<staging_project_name>-terraform-credentials.json"
+    bucket          = "<staging_project_name>-terraform-state"
     prefix          = "terraform/buckets"
   }
 }
 
-module "<project>_buckets" "<project>_staging_buckets" {
+module "<company_name>_buckets" "<staging_project_name>_staging_buckets" {
   source            = "../../modules/buckets"
-  user_bucket_name  = "<project>-staging-frontoffice"
-  media_bucket_name = "<project>-staging-backoffice"
+  user_bucket_name  = "<staging_project_name>-frontoffice"
+  media_bucket_name = "<staging_project_name>-backoffice"
 }
