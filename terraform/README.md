@@ -2,7 +2,7 @@
 
 We use terraform to create Google Cloud resources such as buckets and Google Kubernetes Engine clusters.
 
-**Table of contents:**
+## Table of contents
 * [Install](#install)
 * [Set up and configuration](#set-up-and-configuration)
   * [GCP Project name](#gcp-project-name)
@@ -14,6 +14,7 @@ We use terraform to create Google Cloud resources such as buckets and Google Kub
 * [Buckets access](#buckets-access)
 
 ## Install
+[⬆️](#Table-of-contents)
 
 To install terraform, run the following:
 ```shell
@@ -24,7 +25,7 @@ $ sudo ln -s /opt/terraform_0.11.4 /usr/local/bin/terraform_0.11.4
 ```
 _We currently use terraform 0.11.4 because terraform 0.12.X introduced breaking changes and all the Google Cloud terraform modules we use are not currently compatible vith terraform 0.12.X_
 
-## Set up and configuration
+## Set up and configuration [⬆️](#Table-of-contents)
 
 ### GCP Project name
 
