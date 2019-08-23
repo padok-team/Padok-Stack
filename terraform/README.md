@@ -3,17 +3,17 @@
 We use terraform to create Google Cloud resources such as buckets and Google Kubernetes Engine clusters.
 
 ## Table of contents
-* [Install](#Install-⬆️)
-* [Set up and configuration](#Set-up-and-configuration-⬆️)
-  * [GCP Project name](#GCP-Project-name-⬆️)
-  * [Google Cloud APIs](#Google-Cloud-APIs-⬆️)
-  * [Service account](#Service-account-⬆️)
-  * [State bucket](#State-bucket-⬆️)
-* [Create resources with terraform](#Create-resources-with-terraform-⬆️)
-* [Inspect created resources](#Inspect-created-resources-⬆️)
-* [Buckets access](#Buckets-access-⬆️)
+* [Install](#Install-)
+* [Set up and configuration](#Set-up-and-configuration-)
+  * [GCP Project name](#GCP-Project-name-)
+  * [Google Cloud APIs](#Google-Cloud-APIs-)
+  * [Service account](#Service-account-)
+  * [State bucket](#State-bucket-)
+* [Create resources with terraform](#Create-resources-with-terraform-)
+* [Inspect created resources](#Inspect-created-resources-)
+* [Buckets access](#Buckets-access-)
 
-## Install
+## Install [⬆️](#Table-of-contents)
 
 To install terraform, run the following:
 ```shell
