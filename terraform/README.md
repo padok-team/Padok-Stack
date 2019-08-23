@@ -4,7 +4,7 @@ We use terraform to create Google Cloud resources such as buckets and Google Kub
 
 ## Table of contents
 * [Install](#Install-)
-* [Set up and configuration](#Set-up-and-configuration-)
+* [Set up and configuration](#Set-up-and-configuration-arrow_up)
   * [GCP Project name](#GCP-Project-name-)
   * [Google Cloud APIs](#Google-Cloud-APIs-)
   * [Service account](#Service-account-)
@@ -13,7 +13,7 @@ We use terraform to create Google Cloud resources such as buckets and Google Kub
 * [Inspect created resources](#Inspect-created-resources-)
 * [Buckets access](#Buckets-access-)
 
-## Install [⬆️](#Table-of-contents)
+## Install [:arrow_up:](#Table-of-contents)
 
 To install terraform, run the following:
 ```shell
@@ -24,9 +24,9 @@ $ sudo ln -s /opt/terraform_0.11.4 /usr/local/bin/terraform_0.11.4
 ```
 _We currently use terraform 0.11.4 because terraform 0.12.X introduced breaking changes and all the Google Cloud terraform modules we use are not currently compatible vith terraform 0.12.X_
 
-## Set up and configuration [⬆️](#Table-of-contents)
+## Set up and configuration [:arrow_up:](#Table-of-contents)
 
-### GCP Project name [⬆️](#Table-of-contents)
+### GCP Project name [:arrow_up:](#Table-of-contents)
 
 To keep the commands in this README ad generic as possible, we use the `GCP_PROJECT` environment variable, you can set it with:
 ```shell
@@ -36,7 +36,7 @@ We recommand the following convention:
 * Staging project name : `<company>-staging`
 * Production project name : `<company>-production`
 
-### Google Cloud APIs [⬆️](#Table-of-contents)
+### Google Cloud APIs [:arrow_up:](#Table-of-contents)
 
 To use terraform, you need to activate some Google Cloud APIs:
 ```shell
@@ -47,7 +47,7 @@ $ gcloud services enable cloudresourcemanager.googleapis.com --project="$GCP_PRO
 $ gcloud services enable container.googleapis.com --project="$GCP_PROJECT"
 ```
 
-### Service account [⬆️](#Table-of-contents)
+### Service account [:arrow_up:](#Table-of-contents)
 
 To use terraform, you need a keyfile from a service account with appropriate roles to create the GCP resources. If the service account has already been created, you only need to create and download a keyfile (last step):
 * Create the terraform service account:
@@ -77,7 +77,7 @@ $ gcloud iam service-accounts keys create "$GCP_PROJECT"-terraform-credentials.j
 ```
 _Execute this last command in the same directory as this README._
 
-### State bucket [⬆️](#Table-of-contents)
+### State bucket [:arrow_up:](#Table-of-contents)
 
 You need a bucket to store terraform state. Create the bucket with:
 ```shell
@@ -88,7 +88,7 @@ Grant access to the bucket to the terraform service account:
 $ gsutil iam ch serviceAccount:terraform@"$GCP_PROJECT".iam.gserviceaccount.com:legacyBucketOwner gs://"$GCP_PROJECT"-terraform-state/
 ```
 
-## Create resources with terraform [⬆️](#Table-of-contents)
+## Create resources with terraform [:arrow_up:](#Table-of-contents)
 
 We use terraform to create the GKE cluster, the CloudSQL database and the media and user buckets, for both staging and production environments.
 We rely on the following external community maintained modules:
@@ -111,7 +111,7 @@ $ terraform_0.11.4 plan -out config.tfplan
 $ terraform_0.11.4 apply config.tfplan
 ```
 
-## Inspect created resources [⬆️](#Table-of-contents)
+## Inspect created resources [:arrow_up:](#Table-of-contents)
 
 You can check the resources you created on the Google Cloud Console:
 
@@ -119,7 +119,7 @@ You can check the resources you created on the Google Cloud Console:
 * CloudSQL database: [here](https://console.cloud.google.com/sql/instances)
 * Buckets: [here](https://console.cloud.google.com/storage/browser)
 
-## Buckets access [⬆️](#Table-of-contents)
+## Buckets access [:arrow_up:](#Table-of-contents)
 
 The first time you create the buckets, you have to set their IAM policies for the service account that the app will be using:
 ```shell
@@ -127,7 +127,7 @@ $ gsutil iam ch serviceAccount:<app_service_account_name>@"$GCP_PROJECT".iam.gse
 $ gsutil iam ch serviceAccount:<app_service_account_name>@"$GCP_PROJECT".iam.gserviceaccount.com:legacyBucketOwner gs://"$GCP_PROJECT"-backoffice/
 ```
 
-## Cluster kube context [⬆️](#Table-of-contents)
+## Cluster kube context [:arrow_up:](#Table-of-contents)
 
 To configure `kubectl` to use the created cluster:
 ```shell
