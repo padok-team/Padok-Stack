@@ -1,4 +1,4 @@
-# BAM stack in the cloud
+# BAM stack in the GCP cloud
 
 This project is about making **BAM stack** functional and easy to deploy in the cloud.
 
