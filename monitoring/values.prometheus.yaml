@@ -1,0 +1,68 @@
+---
+server:
+  enabled: true
+
+nodeExporter:
+  enabled: true
+
+alertmanager:
+  enabled: true
+
+pushgateway:
+  enabled: true
+
+kubeStateMetrics:
+  enabled: true
+
+
+alertmanagerFiles:
+  alertmanager.yml:
+    global: {}
+      # slack_api_url: ''
+
+    receivers:
+      - name: default-receiver
+        # slack_configs:
+        #  - channel: '@you'
+        #    send_resolved: true
+
+    route:
+      group_wait: 10s
+      group_interval: 5m
+      receiver: default-receiver
+      repeat_interval: 3h
+
+serverFiles:
+  alerts:
+    groups:
+      - name: nodes
+        rules:
+          - alert: OutOfMemory
+            expr: (node_memory_MemFree_bytes + node_memory_Cached_bytes + node_memory_Buffers_bytes) / node_memory_MemTotal_bytes * 100 < 10
+            for: 5m
+            labels:
+              severity: warning
+            annotations:
+              identifier: "{{ $labels.kubernetes_node }}"
+              summary: "Out of memory (node {{ $labels.kubernetes_node }})"
+              description: "Node memory is filling up ({{ $value }} < 10% left)"
+
+          - alert: UnusualNetworkThroughputIn
+            expr: sum by (kubernetes_node) (irate(node_network_receive_bytes_total[2m])) / 1024 / 1024 > 100
+            for: 5m
+            labels:
+              severity: warning
+            annotations:
+              identifier: "{{ $labels.kubernetes_node }}"
+              summary: "Unusual network throughput in (node {{ $labels.kubernetes_node }})"
+              description: "Host network interfaces are probably receiving too much data ({{ $value }} > 100 MB/s)"
+
+          - alert: UnusualNetworkThroughputOut
+            expr: sum by (kubernetes_node) (irate(node_network_transmit_bytes_total[2m])) / 1024 / 1024 > 100
+            for: 5m
+            labels:
+              severity: warning
+            annotations:
+              identifier: "{{ $labels.kubernetes_node }}"
+              summary: "Unusual network throughput out (node {{ $labels.kubernetes_node }})"
+              description: "Host network interfaces are probably sending too much data ({{ $value }} > 100 MB/s)"
