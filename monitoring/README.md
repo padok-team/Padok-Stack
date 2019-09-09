@@ -36,7 +36,7 @@ Alerts are defined in the `serverFiles` section of the [prometheus values file](
   * A `summary` key that sums the alert up in a short message.
   * a `description` key that details the alert in a longer message.
 
-To write new alerts, you can check out [this collection](https://awesome-prometheus-alerts.grep.to/rules) of alerting rules.
+To write new alerts, you can check out [this collection](https://awesome-prometheus-alerts.grep.to/rules) or [this one](https://gitlab.com/gitlab-com/runbooks/tree/master/rules) of alerting rules or directly check the [prometheus documentation](https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/).
 
 When you are done editing alerting rules, [redeploy prometheus](#arrow_upper_right-Update-configuration) with the new configuration.
 

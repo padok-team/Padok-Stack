@@ -32,12 +32,7 @@ alertmanagerFiles:
       receiver: default-receiver
       repeat_interval: 3h
 
-## Prometheus server ConfigMap entries
-##
 serverFiles:
-
-  ## Alerts configuration
-  ## Ref: https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/
   alerts:
     groups:
       - name: nodes
