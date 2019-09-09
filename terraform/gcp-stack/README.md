@@ -1,28 +1,16 @@
-# Terraform
+# Terraform : GCP Stack
 
 We use terraform to create Google Cloud resources such as buckets and Google Kubernetes Engine clusters.
 
 ## Table of contents
-* [Install](#Install-)
 * [Set up and configuration](#Set-up-and-configuration-arrow_up)
-  * [GCP Project name](#GCP-Project-name-)
-  * [Google Cloud APIs](#Google-Cloud-APIs-)
-  * [Service account](#Service-account-)
-  * [State bucket](#State-bucket-)
-* [Create resources with terraform](#Create-resources-with-terraform-)
-* [Inspect created resources](#Inspect-created-resources-)
-* [Buckets access](#Buckets-access-)
-
-## Install [:arrow_up:](#Table-of-contents)
-
-To install terraform, run the following:
-```shell
-$ wget https://releases.hashicorp.com/terraform/0.11.14/terraform_0.11.14_linux_amd64.zip
-$ unzip terraform_0.11.14_linux_amd64.zip
-$ sudo mv terraform /opt/terraform_0.11.4
-$ sudo ln -s /opt/terraform_0.11.4 /usr/local/bin/terraform_0.11.4
-```
-_We currently use terraform 0.11.4 because terraform 0.12.X introduced breaking changes and all the Google Cloud terraform modules we use are not currently compatible vith terraform 0.12.X_
+  * [GCP Project name](#GCP-Project-name-arrow_up)
+  * [Google Cloud APIs](#Google-Cloud-APIs-arrow_up)
+  * [Service account](#Service-account-arrow_up)
+  * [State bucket](#State-bucket-arrow_up)
+* [Create resources with terraform](#Create-resources-with-terraform-arrow_up)
+* [Inspect created resources](#Inspect-created-resources-arrow_up)
+* [Buckets access](#Buckets-access-arrow_up)
 
 ## Set up and configuration [:arrow_up:](#Table-of-contents)
 
