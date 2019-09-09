@@ -42,4 +42,16 @@ There are several monitoring pods:
 
 ## :arrow_upper_right: Update configuration
 
+The prometheus configuration is stored in the `[values.prometheus.yaml](./values.prometheus.yaml)`file. To update prometheus configuration, edit this file accordingly. The complete list of available variables and associated values can be found in the [default values file](https://github.com/helm/charts/blob/master/stable/prometheus/values.yaml). When you are ready to deploy the new configuration, run:
+```shell
+$ helm upgrade prometheus stable/prometheus -f values.prometheus.yaml --namespace monitoring
+```
+
 ## :construction: Installation
+
+Prometheus is installed with the official [prometheus helm chart](https://github.com/helm/charts/tree/master/stable/prometheus) with a custom [values file](./values.prometheus.yaml) that overrides some defaults variables. Don't hesitate to customize and adapt the values file to your specific use case before installing. The complete list of available variables and associated values can be found in the [default values file](https://github.com/helm/charts/blob/master/stable/prometheus/values.yaml).
+
+To install prometheus, make sure you have helm installed and configured to work with your cluster then run the following from the directory where this README is:
+```shell
+$ helm install stable/prometheus --name prometheus -f values.prometheus.yaml --namespace monitoring
+```
