@@ -11,6 +11,9 @@ The following monitoring and alerting stack relies on [Prometheus](https://prome
 
 ## :chart_with_upwards_trend: Dashboards
 
+_All the following dashboards can be exposed behind an ingress. All the corresponding pods have associated services that can be configured in the values files (see [installation instructions](#construction-Installation))_
+
+
 Grafana has a main dashboard to visualize metrics collected by prometheus. It can be accessed with port-forward at [localhost:3000](http://localhost:3000) after running:
   ```shell
   $ kubectl --namespace monitoring port-forward $(kubectl get pods --namespace monitoring -l "app=grafana" -o jsonpath="{.items[0].metadata.name}") 3000
