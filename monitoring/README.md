@@ -11,6 +11,14 @@ The following monitoring and alerting stack relies on [Prometheus](https://prome
 
 ## :chart_with_upwards_trend: Dashboards
 
+Grafana has a main dashboard to visualize metrics collected by prometheus. It can be accessed with port-forward at [localhost:3000](http://localhost:3000) after running:
+  ```shell
+  $ kubectl --namespace monitoring port-forward $(kubectl get pods --namespace monitoring -l "app=grafana" -o jsonpath="{.items[0].metadata.name}") 3000
+  ```
+  The password for the `admin` account can be obtained with:
+  ```shell
+  $ kubectl get secret --namespace monitoring grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+  ```
 Prometheus offers different dashboards:
 * The main prometheus dashboard, it can be accessed with port-forward at [localhost:9090](http://localhost:9090) after running:
   ```shell
@@ -34,7 +42,7 @@ Alerts are defined in the `serverFiles` section of the [prometheus values file](
 * An `annotations` key under which can be defined:
   * An `identifier` key that describes which instance is affected.
   * A `summary` key that sums the alert up in a short message.
-  * a `description` key that details the alert in a longer message.
+  * A `description` key that details the alert in a longer message.
 
 To write new alerts, you can check out [this collection](https://awesome-prometheus-alerts.grep.to/rules) or [this one](https://gitlab.com/gitlab-com/runbooks/tree/master/rules) of alerting rules or directly check the [prometheus documentation](https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/).
 
@@ -53,12 +61,18 @@ There are several monitoring pods:
 * A `prometheus-alertmanager` pod that sends notifications based on metrics events (webhook, mail, slack, ...).
 * A `prometheus-pushgateway` pod that collects metrics from Jobs and CronJobs.
 * A `prometheus-kube-state-metrics` pod that collects cluster level metrics.
+* A `grafana` pod that hosts the grafana dashboard.
 
 ## :arrow_upper_right: Update configuration
 
 The prometheus configuration is stored in the `[values.prometheus.yaml](./values.prometheus.yaml)`file. To update prometheus configuration, edit this file accordingly. The complete list of available variables and associated values can be found in the [default values file](https://github.com/helm/charts/blob/master/stable/prometheus/values.yaml). When you are ready to deploy the new configuration, run:
 ```shell
 $ helm upgrade prometheus stable/prometheus -f values.prometheus.yaml --namespace monitoring
+```
+
+The grafana configuration is stored in the `[values.grafana.yaml](./values.grafana.yaml)`file. To update grafana configuration, edit this file accordingly. The complete list of available variables and associated values can be found in the [default values file](https://github.com/helm/charts/blob/master/stable/grafana/values.yaml). When you are ready to deploy the new configuration, run:
+```shell
+$ helm upgrade grafana stable/grafana -f values.grafana.yaml --namespace monitoring
 ```
 
 ## :construction: Installation
@@ -68,4 +82,11 @@ Prometheus is installed with the official [prometheus helm chart](https://github
 To install prometheus, make sure you have helm installed and configured to work with your cluster then run the following from the directory where this README is:
 ```shell
 $ helm install stable/prometheus --name prometheus -f values.prometheus.yaml --namespace monitoring
+```
+
+Grafana is installed with the official [grafana helm chart](https://github.com/helm/charts/tree/master/stable/grafana) with a custom [values file](./values.grafana.yaml) that overrides some defaults variables. Don't hesitate to customize and adapt the values file to your specific use case before installing. The complete list of available variables and associated values can be found in the [default values file](https://github.com/helm/charts/blob/master/stable/grafana/values.yaml).
+
+To install grafana, make sure you have helm installed and configured to work with your cluster then run the following from the directory where this README is:
+```shell
+$ helm install stable/grafana --name grafana -f values.grafana.yaml --namespace monitoring
 ```
