@@ -1,0 +1,56 @@
+### deployment level ###
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: { { .Values.php.name } }
+  labels:
+    app: { { .Values.php.name } }
+spec:
+  ### replicaset level ###
+  replicas: { { .Values.replicaCount } }
+  selector:
+    matchLabels:
+      app.api-platform-stack.io/name:
+        { { include "api-platform-stack.fullname" . } }
+      app.api-platform-stack.io/instance: { { .Release.Name } }
+  template:
+    ### pod level ###
+    # As always with replication, the pod's labels need to match replicaset selector
+    metadata:
+      labels:
+        app: { { .Values.php.name } }
+    spec:
+      containers:
+        - name: { { .Values.php.name } }
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: { { .Values.image.pullPolicy } }
+          ports:
+            - name: node-port
+              containerPort: { { .Values.php.service.port } }
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: node-port
+          readinessProbe:
+            httpGet:
+              path: /
+              port: node-port
+        - image: gcr.io/cloudsql-docker/gce-proxy:1.15
+          name: cloudsql-proxy
+          command:
+            - "/cloud_sql_proxy"
+            - "-instances={{ .Values.db.address }}=tcp:5432"
+            - "-credential_file=/secrets/cloudsql/postgres-admin-key.json"
+          securityContext:
+            runAsUser: 0
+            allowPriviledgeEscalation: false
+          volumeMounts:
+            - name: vol-proxy
+              mountPath: "/secrets/cloudsql/postgres-admin-key.json"
+              subPath: postgres-admin-key.json
+              readOnly: true
+      volumes:
+        - name: vol-proxy
+          secret:
+            secretName: sql-proxy

@@ -1,0 +1,43 @@
+# Default values for kubernetes.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+#####################
+##### OWNER SRE #####
+#####################
+replicaCount: 1
+
+image:
+  pullPolicy: Always
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+php:
+  name: php
+  service:
+    type: ClusterIP
+    port: 9000
+  image:
+    repository: gcr.io/<PROJECT_ID>/<PHP_IMAGE_NAME>
+    tag: 2.0
+
+nginx:
+  name: nginx
+  service:
+    type: NodePort
+    port: 80
+  image:
+    repository: gcr.io/<PROJECT_ID>/<NGINX_IMAGE_NAME>
+    tag: 2.0
+
+#####################
+##### OWNER DEV #####
+#####################
+db:
+  address: kubernetes-simple-app-251112:europe-west1:test-cloudsql
+  port: 5432
+  name: api-platform_stack
+  user: docker
+  password: docker

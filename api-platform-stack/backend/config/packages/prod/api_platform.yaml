@@ -1,0 +1,12 @@
+api_platform:
+    # Enable the Swagger documentation and export.
+    enable_swagger: false
+
+     # Enable Swagger ui.
+    enable_swagger_ui: false
+
+     # Enable the entrypoint.
+    enable_entrypoint: false
+
+     # Enable the docs.
+    enable_docs: false

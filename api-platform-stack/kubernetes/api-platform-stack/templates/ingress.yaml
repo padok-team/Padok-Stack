@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: { { include "api-platform-stack.fullname" . } }
+  labels:
+    app: { { include "api-platform-stack.labels" . | indent 4 } }
+spec:
+  tls:
+    - secretName: tls-secret
+      hosts:
+        - "api-platform-stack.api.com"
+  rules:
+    - host: "api-platform-stack.api.com"
+      http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: { { include "api-platform-stack.fullname" . } }
+              servicePort: { { .Values.nginx.service.port } }
+status:
+  loadBalancer:
+    ingress:
+      - {}

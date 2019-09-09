@@ -1,0 +1,7 @@
+parameters:
+    dummy: '%env(VARNISH_URL)%'  # This parameter is set in order to prevent Symfony from telling us we did not use the VARNISH_URL env variable
+
+api_platform:
+    http_cache:
+        invalidation:
+            enabled: false

@@ -1,0 +1,4 @@
+App\Entity\User:
+    jean_moust:
+        email (unique): jean_mousquetaire
+        password: '\$argon2i\$v=19\$m=1024,t=2,p=2\$ZnRYMWVpVnpURTQ3bXlmMA\$ELC4YJX0PzKqlkdkxAU1RrirOo3B8WK6JBTILdyYLnU' # = lolilol

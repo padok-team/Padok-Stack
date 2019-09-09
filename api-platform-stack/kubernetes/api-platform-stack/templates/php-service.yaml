@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: { { .Values.php.name } }
+  labels:
+    app: { { .Values.php.name } }
+spec:
+  type: { { .Values.service.type } }
+  ports:
+    - port: { { .Values.php.service.port } }
+      targetPort: { { .Values.php.service.port } }
+      procotol: TCP
+  selector:
+    app: php

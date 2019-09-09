@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config
+  labels:
+    app: php
+data:
+  env: prod
+  debug: "0"
+  cors-allow-origin: http://example.com
+  JWT_SECRET_KEY: jwt_random_secret_key
+  JWT_PUBLIC_KEY: jwt_random_public_key
+  JWT_PASSPHRASE: 064084dd9e8651614e3f99555e98b39d

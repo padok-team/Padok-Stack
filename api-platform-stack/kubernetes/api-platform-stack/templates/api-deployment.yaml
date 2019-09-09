@@ -1,0 +1,38 @@
+### deployment level ###
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: { { .Values.nginx.name } }
+  labels:
+    app: { { .Values.nginx.name } }
+spec:
+  ### replicaset level ###
+  replicas: { { .Values.replicaCount } }
+  selector:
+    matchLabels:
+      app.api-platform-stack.io/name:
+        { { include "api-platform-stack.fullname" . } }
+      app.api-platform-stack.io/instance: { { .Release.Name } }
+  template:
+    ### pod level ###
+    # As always with replication, the pod's labels need to match replicaset selector
+    metadata:
+      labels:
+        app: { { .Values.nginx.name } }
+    spec:
+      containers:
+        - name: { { .Values.nginx.name } }
+          image: "{{ .Values.nginx.image.repository }}:{{ .Values.nginx.image.tag }}"
+          imagePullPolicy: { { .Values.image.pullPolicy } }
+          ports:
+            - name: node-port
+              containerPort: { { .Values.nginx.service.port } }
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: node-port
+          readinessProbe:
+            httpGet:
+              path: /
+              port: node-port

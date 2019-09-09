@@ -1,0 +1,5 @@
+api_login_check:
+    path: /auth/jwt/create
+
+api_refresh_token_check:
+    path: /auth/jwt/refresh
