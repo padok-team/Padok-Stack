@@ -1,6 +1,6 @@
 # Monitoring
 
-The following monitoring and alerting stack relies on [Prometheus](https://prometheus.io/) and [Grafana](https://grafana.com/). It is installed and updated with helm.
+The following monitoring and alerting stack relies on [Prometheus](https://prometheus.io/) and [Grafana](https://grafana.com/). It is installed and updated with [helm](https://helm.sh/).
 
 ## Table of contents
 * [:chart_with_upwards_trend: Dashboards](#chart_with_upwards_trend-Dashboards)
@@ -11,6 +11,19 @@ The following monitoring and alerting stack relies on [Prometheus](https://prome
 
 ## :chart_with_upwards_trend: Dashboards
 
+Prometheus offers different dashboards:
+* The main prometheus dashboard, it can be accessed with port-forward at [localhost:9090](http://localhost:9090) after running:
+  ```shell
+  kubectl --namespace monitoring port-forward $(kubectl get pods --namespace monitoring -l "app=prometheus,component=server" -o jsonpath="{.items[0].metadata.name}") 9090
+  ```
+* The alertmanager dashboard, it can be accessed with port-forward at [localhost:9093](http://localhost:9093) after running:
+  ```shell
+  kubectl --namespace monitoring port-forward $(kubectl get pods --namespace monitoring -l "app=prometheus,component=alertmanager" -o jsonpath="{.items[0].metadata.name}") 9093
+  ```
+* The pushgateway dashboard, it can be accessed with port-forward at [localhost:9091](http://localhost:9091) after running:
+  ```shell
+  kubectl --namespace monitoring port-forward $(kubectl get pods --namespace monitoring -l "app=prometheus,component=pushgateway" -o jsonpath="{.items[0].metadata.name}") 9091
+  ```
 ## :rotating_light: Alerting
 
 ## :beginner: Pods
