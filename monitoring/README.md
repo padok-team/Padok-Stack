@@ -26,6 +26,20 @@ Prometheus offers different dashboards:
   ```
 ## :rotating_light: Alerting
 
+Alerts are defined in the `serverFiles` section of the [prometheus values file](./values.prometheus.yaml). An alert consists of the following elements:
+* A name defined by the `alert` key.
+* A [PromQL](https://prometheus.io/docs/prometheus/latest/querying/examples/) expression defining a trigger condition based on the values of prometheus metrics. This is configured with the `expr` key.
+* A delay for which the trigger condition has to be true to fire the alert. This is configured with the `for` key.
+* A `labels` key that allow to specify a severity for each alert.
+* An `annotations` key under which can be defined:
+  * An `identifier` key that describes which instance is affected.
+  * A `summary` key that sums the alert up in a short message.
+  * a `description` key that details the alert in a longer message.
+
+To write new alerts, you can check out [this collection](https://awesome-prometheus-alerts.grep.to/rules) of alerting rules.
+
+When you are done editing alerting rules, [redeploy prometheus](#arrow_upper_right-Update-configuration) with the new configuration.
+
 ## :beginner: Pods
 
 The monitoring pods run in the `monitoring` namespace. To interact with them, use the regular `kubectl` commands with the `--namespace` (or `-n`) flag:
