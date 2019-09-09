@@ -1,4 +1,13 @@
-# BAM stack in the GCP cloud
+# Padok Stack
+
+This repository contains all the resources used to build and deploy a standard Padok Cloud Stack:
+* [Terraform code](./terraform/README.md) to build cloud infrastructure on GCP or AWS.
+* Dockerization instructions for standard nodeJS (such as a BAM stack) or PHP applications
+* Helm charts to deploy dockerized apps in the cloud
+* Standard prometheus/grafana monitoring and alerting stack.
+
+
+---
 
 This project is about making **BAM stack** functional and easy to deploy in the cloud.
 
@@ -9,7 +18,7 @@ To make this happen you will have to:
      - Manage Firebase authent
      - Customize the app config
  2. [Provision your environment with Terraform](terraform/README.md):
-     - Create a GKE Kubernetes cluster 
+     - Create a GKE Kubernetes cluster
      - Create a GCP SQL Database
      - Create GCS buckets
  3. [Deploy the app with Helm](kubernetes/README.md)
@@ -56,7 +65,7 @@ The BAM stack is composed of :
           - password
     - Authent:
        - To the database with user/password
-       - To Firebase with a key 
+       - To Firebase with a key
  - **A PostgreSQL database**
     - Listen: 5432
     - Should have a db, user and password pre-configured
