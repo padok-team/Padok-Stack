@@ -44,6 +44,7 @@ $ gcloud iam service-accounts create terraform --project="$GCP_PROJECT"
 ```
 * Grant it the roles required to create GCP resources
   <details><summary><b>Show commands</b></summary>
+ 
   * To create buckets:
   ```shell
   $ gcloud projects add-iam-policy-binding "$GCP_PROJECT" --member serviceAccount:terraform@"$GCP_PROJECT".iam.gserviceaccount.com --role roles/storage.admin
