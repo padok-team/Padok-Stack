@@ -1,3 +1,4 @@
+# Don't use, got gitlab -> https://gitlab.com/padok-team/Padok-Stack
 # Padok Stack
 
 This repository contains all the resources used to build and deploy a standard Padok Cloud Stack:
